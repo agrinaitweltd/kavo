@@ -856,8 +856,13 @@ img {
     animation: logo-breathe 3.2s ease-in-out infinite;
 }
 
-.logo-item img.logo-invert {
-    filter: grayscale(100%) opacity(0.6) invert(1);
+.logo-item--dark {
+    background: #111;
+    border-color: #333;
+}
+
+.logo-item--dark img {
+    filter: grayscale(100%) opacity(0.55);
 }
 
 .logo-item:hover {
@@ -872,8 +877,12 @@ img {
     animation-play-state: paused;
 }
 
-.logo-item:hover img.logo-invert {
-    filter: grayscale(0%) opacity(1) invert(1);
+.logo-item--dark:hover {
+    border-color: #555;
+}
+
+.logo-item--dark:hover img {
+    filter: grayscale(0%) opacity(1);
 }
 
 /* Site Preview Popup */
