@@ -14,6 +14,7 @@ document.addEventListener('DOMContentLoaded', () => {
     initWhatsAppCtas();
     initFormHandling();
     initCookiePopup();
+    initClientPreviews();
 });
 
 const WHATSAPP_NUMBER = '447913166329';
@@ -486,4 +487,96 @@ function initMobileCardAnimations() {
     });
 
     cards.forEach(card => observer.observe(card));
+}
+
+// ========================================
+// Client Logo Hover Previews
+// ========================================
+function initClientPreviews() {
+    const logoItems = document.querySelectorAll('.logo-item[data-url]');
+    if (!logoItems.length || window.innerWidth <= 768) return;
+
+    // Create the floating preview element once
+    const preview = document.createElement('div');
+    preview.className = 'site-preview';
+    preview.innerHTML = `
+        <div class="site-preview-header">
+            <span class="site-preview-dot"></span>
+            <span class="site-preview-dot"></span>
+            <span class="site-preview-dot"></span>
+            <span class="site-preview-url"></span>
+        </div>
+        <div class="site-preview-body">
+            <div class="site-preview-loader"></div>
+            <iframe sandbox="allow-scripts allow-same-origin" loading="lazy" title="Site preview"></iframe>
+        </div>`;
+    document.body.appendChild(preview);
+
+    const iframe = preview.querySelector('iframe');
+    const urlLabel = preview.querySelector('.site-preview-url');
+    const loader = preview.querySelector('.site-preview-loader');
+
+    let hoverTimeout = null;
+    let currentUrl = '';
+
+    function positionPreview(item) {
+        const rect = item.getBoundingClientRect();
+        const pw = 420;
+        const ph = 280;
+        const gap = 14;
+
+        // Place above the logo by default
+        let top = rect.top - ph - gap;
+        let left = rect.left + rect.width / 2 - pw / 2;
+
+        // If it would go above viewport, place below
+        if (top < 8) {
+            top = rect.bottom + gap;
+        }
+        // Keep within horizontal bounds
+        if (left < 8) left = 8;
+        if (left + pw > window.innerWidth - 8) left = window.innerWidth - pw - 8;
+
+        preview.style.top = top + 'px';
+        preview.style.left = left + 'px';
+    }
+
+    logoItems.forEach(item => {
+        item.addEventListener('mouseenter', () => {
+            const url = item.getAttribute('data-url');
+            if (!url) return;
+
+            clearTimeout(hoverTimeout);
+
+            hoverTimeout = setTimeout(() => {
+                positionPreview(item);
+
+                if (currentUrl !== url) {
+                    currentUrl = url;
+                    loader.style.display = 'block';
+                    iframe.style.opacity = '0';
+                    iframe.src = url;
+                    urlLabel.textContent = url.replace(/^https?:\/\//, '').replace(/\/$/, '');
+
+                    iframe.onload = () => {
+                        loader.style.display = 'none';
+                        iframe.style.opacity = '1';
+                    };
+                }
+
+                preview.classList.add('visible');
+            }, 250);
+        });
+
+        item.addEventListener('mouseleave', () => {
+            clearTimeout(hoverTimeout);
+            preview.classList.remove('visible');
+        });
+
+        // Click takes user to the site
+        item.addEventListener('click', () => {
+            const url = item.getAttribute('data-url');
+            if (url) window.open(url, '_blank', 'noopener,noreferrer');
+        });
+    });
 }
