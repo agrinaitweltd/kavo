@@ -856,6 +856,10 @@ img {
     animation: logo-breathe 3.2s ease-in-out infinite;
 }
 
+.logo-item img.logo-invert {
+    filter: grayscale(100%) opacity(0.6) invert(1);
+}
+
 .logo-item:hover {
     border-color: var(--black);
     transform: translateY(-6px) scale(1.04);
@@ -868,11 +872,14 @@ img {
     animation-play-state: paused;
 }
 
+.logo-item:hover img.logo-invert {
+    filter: grayscale(0%) opacity(1) invert(1);
+}
+
 /* Site Preview Popup */
 .site-preview {
     position: fixed;
-    width: 420px;
-    height: 280px;
+    width: 380px;
     background: var(--white);
     border: 1.5px solid var(--gray-200);
     border-radius: 12px;
@@ -881,9 +888,9 @@ img {
     overflow: hidden;
     pointer-events: none;
     opacity: 0;
-    transform: translateY(8px) scale(0.96);
-    transition: opacity 0.35s cubic-bezier(0.25, 0.46, 0.45, 0.94),
-                transform 0.35s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    transform: translateY(10px) scale(0.92);
+    transition: opacity 0.3s cubic-bezier(0.16, 1, 0.3, 1),
+                transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .site-preview.visible {
@@ -927,19 +934,16 @@ img {
 }
 
 .site-preview-body {
-    width: 100%;
-    height: calc(100% - 34px);
     position: relative;
     background: var(--gray-50);
+    min-height: 200px;
 }
 
-.site-preview-body iframe {
-    width: 200%;
-    height: 200%;
-    border: none;
-    transform: scale(0.5);
-    transform-origin: top left;
-    pointer-events: none;
+.site-preview-body img {
+    width: 100%;
+    height: auto;
+    display: block;
+    transition: opacity 0.3s ease;
 }
 
 .site-preview-loader {
@@ -953,6 +957,26 @@ img {
     border-top-color: var(--black);
     border-radius: 50%;
     animation: preview-spin 0.7s linear infinite;
+}
+
+.site-preview-visit {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    padding: 10px;
+    font-family: var(--font-primary);
+    font-size: 0.65rem;
+    font-weight: 600;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    color: var(--gray-500);
+    border-top: 1px solid var(--gray-200);
+    background: var(--gray-50);
+}
+
+.site-preview-visit svg {
+    transition: transform 0.2s ease;
 }
 
 @keyframes preview-spin {

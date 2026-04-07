@@ -508,22 +508,35 @@ function initClientPreviews() {
         </div>
         <div class="site-preview-body">
             <div class="site-preview-loader"></div>
-            <iframe sandbox="allow-scripts allow-same-origin" loading="lazy" title="Site preview"></iframe>
+            <img src="" alt="Site preview" style="opacity:0">
+        </div>
+        <div class="site-preview-visit">
+            Click to visit
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 17L17 7"/><path d="M7 7h10v10"/></svg>
         </div>`;
     document.body.appendChild(preview);
 
-    const iframe = preview.querySelector('iframe');
+    const thumb = preview.querySelector('.site-preview-body img');
     const urlLabel = preview.querySelector('.site-preview-url');
     const loader = preview.querySelector('.site-preview-loader');
 
     let hoverTimeout = null;
     let currentUrl = '';
 
+    // Pre-cache screenshot URLs so hover feels instant
+    const cache = {};
+
+    function getScreenshotUrl(url) {
+        return `https://image.thum.io/get/width/760/crop/480/noanimate/${url}`;
+    }
+
     function positionPreview(item) {
         const rect = item.getBoundingClientRect();
-        const pw = 420;
-        const ph = 280;
+        const pw = 380;
         const gap = 14;
+
+        // Estimate height (header ~34 + image ~200 + footer ~36)
+        const ph = 280;
 
         // Place above the logo by default
         let top = rect.top - ph - gap;
@@ -542,30 +555,48 @@ function initClientPreviews() {
     }
 
     logoItems.forEach(item => {
-        item.addEventListener('mouseenter', () => {
-            const url = item.getAttribute('data-url');
-            if (!url) return;
+        const url = item.getAttribute('data-url');
 
+        // Preload screenshot on first intersection
+        const preloadObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting && url && !cache[url]) {
+                    const img = new Image();
+                    img.src = getScreenshotUrl(url);
+                    cache[url] = img;
+                    preloadObserver.unobserve(item);
+                }
+            });
+        }, { rootMargin: '200px' });
+        preloadObserver.observe(item);
+
+        item.addEventListener('mouseenter', () => {
+            if (!url) return;
             clearTimeout(hoverTimeout);
 
             hoverTimeout = setTimeout(() => {
                 positionPreview(item);
+                urlLabel.textContent = url.replace(/^https?:\/\//, '').replace(/\/$/, '');
 
                 if (currentUrl !== url) {
                     currentUrl = url;
                     loader.style.display = 'block';
-                    iframe.style.opacity = '0';
-                    iframe.src = url;
-                    urlLabel.textContent = url.replace(/^https?:\/\//, '').replace(/\/$/, '');
+                    thumb.style.opacity = '0';
 
-                    iframe.onload = () => {
+                    const src = getScreenshotUrl(url);
+                    thumb.src = src;
+                    thumb.onload = () => {
                         loader.style.display = 'none';
-                        iframe.style.opacity = '1';
+                        thumb.style.opacity = '1';
+                    };
+                    thumb.onerror = () => {
+                        loader.style.display = 'none';
+                        thumb.style.opacity = '0';
                     };
                 }
 
                 preview.classList.add('visible');
-            }, 250);
+            }, 200);
         });
 
         item.addEventListener('mouseleave', () => {
@@ -575,7 +606,6 @@ function initClientPreviews() {
 
         // Click takes user to the site
         item.addEventListener('click', () => {
-            const url = item.getAttribute('data-url');
             if (url) window.open(url, '_blank', 'noopener,noreferrer');
         });
     });
