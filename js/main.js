@@ -17,7 +17,7 @@ document.addEventListener('DOMContentLoaded', () => {
     initClientPreviews();
 });
 
-const WHATSAPP_NUMBER = '447913166329';
+const WHATSAPP_NUMBER = '447451267226';
 
 function openWhatsApp(message) {
     const encoded = encodeURIComponent(message);
