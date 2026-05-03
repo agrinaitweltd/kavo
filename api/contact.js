@@ -13,7 +13,7 @@ async function verifyRecaptcha(token) {
         body
     });
     const data = await res.json();
-    return data.success === true;
+    return data.success === true && (data.score === undefined || data.score >= 0.5);
 }
 
 module.exports = async function handler(req, res) {

@@ -310,6 +310,11 @@ function initFormHandling() {
         updateFormStatus(statusElement, 'Sending your message...', 'pending');
 
         try {
+            // Get reCAPTCHA v3 token before sending
+            if (typeof grecaptcha !== 'undefined') {
+                payload.recaptchaToken = await grecaptcha.execute('6LcnRtcsAAAAAJ8Sm0iJJPBS5oGn9PLNYQYIvT59', { action: 'contact_form' });
+            }
+
             const response = await fetch(CONTACT_API_ENDPOINT, {
                 method: 'POST',
                 headers: {
@@ -328,7 +333,6 @@ function initFormHandling() {
             if (startedAtField) {
                 startedAtField.value = String(Date.now());
             }
-            if (typeof grecaptcha !== 'undefined') { grecaptcha.reset(); }
 
             // Show thank-you screen
             const successScreen = document.getElementById('formSuccessScreen');
@@ -355,7 +359,6 @@ function initFormHandling() {
                 error instanceof Error ? error.message : fallbackMessage,
                 'error'
             );
-            if (typeof grecaptcha !== 'undefined') { grecaptcha.reset(); }
         } finally {
             setFormPending(submitButton, submitLabel, false);
         }
@@ -492,7 +495,7 @@ function getFormPayload(form) {
         consent: form.querySelector('#consent')?.checked || false,
         honeypot: form.querySelector('#websiteTrap')?.value.trim() || '',
         formStartedAt: form.querySelector('#formStartedAt')?.value || '',
-        recaptchaToken: (typeof grecaptcha !== 'undefined' ? grecaptcha.getResponse() : '') || ''
+        recaptchaToken: ''
     };
 }
 
@@ -574,10 +577,6 @@ function validateFormPayload(payload) {
 
     if (!payload.consent) {
         return 'Please confirm consent so we can respond to your enquiry.';
-    }
-
-    if (!payload.recaptchaToken) {
-        return 'Please complete the reCAPTCHA verification.';
     }
 
     return '';
