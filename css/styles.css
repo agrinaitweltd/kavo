@@ -166,7 +166,7 @@ img {
 }
 
 .footer-logo-img {
-    height: 188px;
+    height: 146px;
     width: auto;
     display: block;
 }
@@ -654,7 +654,11 @@ img {
     border-radius: 12px;
     min-width: 160px;
     transition: var(--transition);
+    animation: surface-breathe 5.4s ease-in-out infinite;
 }
+
+.stat-card:nth-child(2) { animation-delay: 0.35s; }
+.stat-card:nth-child(3) { animation-delay: 0.7s; }
 
 .stat-card:hover {
     border-color: var(--gray-400);
@@ -760,6 +764,30 @@ img {
 .section-tag-light { color: var(--gray-400); }
 .section-title-light { color: var(--white); }
 .section-subtitle-light { color: var(--gray-400); }
+
+.service-icon,
+.why-icon,
+.stat-icon,
+.client-stat-icon,
+.contact-card-icon {
+    animation: icon-bob 4.8s ease-in-out infinite;
+}
+
+.service-card:nth-child(2) .service-icon,
+.why-card:nth-child(2) .why-icon,
+.client-stat:nth-child(2) .client-stat-icon,
+.contact-card:nth-child(2) .contact-card-icon,
+.stat-card:nth-child(2) .stat-icon {
+    animation-delay: 0.4s;
+}
+
+.service-card:nth-child(3) .service-icon,
+.why-card:nth-child(3) .why-icon,
+.client-stat:nth-child(3) .client-stat-icon,
+.contact-card:nth-child(3) .contact-card-icon,
+.stat-card:nth-child(3) .stat-icon {
+    animation-delay: 0.8s;
+}
 
 /* ========================================
    Services Section
@@ -1022,7 +1050,12 @@ img {
     flex-direction: column;
     align-items: center;
     gap: 8px;
+    animation: surface-breathe 5.8s ease-in-out infinite;
 }
+
+.client-stat:nth-child(2) { animation-delay: 0.3s; }
+.client-stat:nth-child(3) { animation-delay: 0.6s; }
+.client-stat:nth-child(4) { animation-delay: 0.9s; }
 
 .client-stat-icon {
     color: var(--black);
@@ -1780,11 +1813,12 @@ img {
 
 .footer-logo {
     display: inline-block;
-    padding: 14px 18px;
+    padding: 10px 14px;
     border-radius: 14px;
     background: #ffffff;
     border: 1px solid rgba(255, 255, 255, 0.35);
     box-shadow: 0 12px 28px rgba(0, 0, 0, 0.28);
+    animation: footer-logo-float 5.6s ease-in-out infinite;
 }
 
 .footer-cta {
@@ -1832,6 +1866,13 @@ img {
     color: var(--black);
     transform: translateY(-3px);
 }
+
+.social-links a {
+    animation: social-breathe 4.6s ease-in-out infinite;
+}
+
+.social-links a:nth-child(2) { animation-delay: 0.25s; }
+.social-links a:nth-child(3) { animation-delay: 0.5s; }
 
 .footer-links h4,
 .footer-contact h4 {
@@ -1909,6 +1950,46 @@ img {
 .footer-bottom p {
     color: var(--gray-500);
     font-size: 0.85rem;
+}
+
+@keyframes surface-breathe {
+    0%,
+    100% {
+        box-shadow: 0 0 0 rgba(17, 19, 23, 0);
+    }
+    50% {
+        box-shadow: 0 10px 24px rgba(17, 19, 23, 0.06);
+    }
+}
+
+@keyframes icon-bob {
+    0%,
+    100% {
+        transform: translateY(0);
+    }
+    50% {
+        transform: translateY(-4px);
+    }
+}
+
+@keyframes footer-logo-float {
+    0%,
+    100% {
+        transform: translateY(0);
+    }
+    50% {
+        transform: translateY(-5px);
+    }
+}
+
+@keyframes social-breathe {
+    0%,
+    100% {
+        box-shadow: 0 0 0 0 rgba(255, 255, 255, 0.08);
+    }
+    50% {
+        box-shadow: 0 0 0 8px rgba(255, 255, 255, 0);
+    }
 }
 
 /* ========================================
@@ -2169,20 +2250,28 @@ img {
 
 .section-header.animated .text-reveal,
 .services-grid.animated .text-reveal,
+.clients-showcase.animated .text-reveal,
+.clients-stats.animated .text-reveal,
+.stats-grid.animated .text-reveal,
 .why-grid.animated .text-reveal,
 .pricing-grid.animated .text-reveal,
 .addon-grid.animated .text-reveal,
-.contact-cards.animated .text-reveal {
+.contact-cards.animated .text-reveal,
+.footer-grid.animated .text-reveal {
     animation: text-reveal-in 0.72s cubic-bezier(0.22, 1, 0.36, 1) both;
     animation-delay: calc(var(--text-index, 0) * 60ms);
 }
 
 .section-header.animated .text-pop,
 .services-grid.animated .text-pop,
+.clients-showcase.animated .text-pop,
+.clients-stats.animated .text-pop,
+.stats-grid.animated .text-pop,
 .why-grid.animated .text-pop,
 .pricing-grid.animated .text-pop,
 .addon-grid.animated .text-pop,
-.contact-cards.animated .text-pop {
+.contact-cards.animated .text-pop,
+.footer-grid.animated .text-pop {
     animation: text-pop-in 0.78s cubic-bezier(0.22, 1, 0.36, 1) both;
     animation-delay: calc(var(--text-index, 0) * 72ms);
 }
@@ -2427,7 +2516,7 @@ img {
     }
 
     .footer-logo-img {
-        height: 168px;
+        height: 126px;
     }
 
     .section-title {
@@ -2511,7 +2600,7 @@ img {
     }
 
     .footer-logo-img {
-        height: 150px;
+        height: 112px;
     }
 
     /* Auto-gloss sweep on service cards */

@@ -188,7 +188,7 @@ function initHeroWordAnimation() {
 // ========================================
 function initTextStaggerAnimations() {
     const blocks = document.querySelectorAll(
-        '.section-header, .services-grid, .why-grid, .pricing-grid, .addon-grid, .contact-cards'
+        '.section-header, .services-grid, .clients-showcase, .clients-stats, .stats-grid, .why-grid, .pricing-grid, .addon-grid, .contact-cards, .footer-grid'
     );
 
     if (!blocks.length) return;
@@ -196,7 +196,7 @@ function initTextStaggerAnimations() {
     blocks.forEach((block) => {
         let textIndex = 0;
         const targets = block.querySelectorAll(
-            '.section-tag, .section-title, .section-subtitle, h3, h4, p, .pricing-tier, .pricing-price, .addon-title, .pricing-features li, .addon-row span'
+            '.section-tag, .section-title, .section-subtitle, h3, h4, p, a, .pricing-tier, .pricing-price, .addon-title, .pricing-features li, .addon-row span, .stat-number, .stat-label, .client-stat-number, .client-stat-label, .stat-ring-label'
         );
 
         targets.forEach((target) => {
@@ -322,6 +322,24 @@ function initFormHandling() {
     const statusElement = form.querySelector('.form-status');
     const startedAtField = form.querySelector('#formStartedAt');
     const syncServiceFields = initServiceAdaptiveFields(form);
+    const successScreen = document.getElementById('formSuccessScreen');
+    const contactCards = document.querySelector('.quote-section .contact-cards');
+
+    function resetFormUi() {
+        form.hidden = false;
+        if (successScreen) {
+            successScreen.hidden = true;
+        }
+        if (contactCards) {
+            contactCards.hidden = false;
+        }
+    }
+
+    resetFormUi();
+
+    window.addEventListener('pageshow', () => {
+        resetFormUi();
+    });
 
     if (startedAtField) {
         startedAtField.value = String(Date.now());
@@ -375,9 +393,7 @@ function initFormHandling() {
             }
 
             // Show thank-you screen
-            const successScreen = document.getElementById('formSuccessScreen');
             const successBody = document.getElementById('formSuccessBody');
-            const contactCards = document.querySelector('.quote-section .contact-cards');
             if (successScreen) {
                 if (successBody && payload.name) {
                     successBody.textContent = `Thanks ${payload.name}, we\u2019ll be in touch within 24 hours.`;
