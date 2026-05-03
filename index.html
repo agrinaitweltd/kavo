@@ -24,7 +24,7 @@
     <link rel="canonical" href="https://kavotech.uk/">
     <link rel="icon" type="image/png" href="public/kavologo.png">
     <link rel="apple-touch-icon" href="public/kavologo.png">
-    <link rel="stylesheet" href="css/styles.css?v=20260503-7">
+    <link rel="stylesheet" href="css/styles.css?v=20260503-8">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -533,7 +533,11 @@
                         <select id="service" name="service" required>
                             <option value="">Select a service</option>
                             <option value="website">Website Design</option>
+                            <option value="redevelopment">Website Redevelopment</option>
                             <option value="ecommerce">E-Commerce</option>
+                            <option value="app">App Development</option>
+                            <option value="seo">SEO Setup</option>
+                            <option value="googleads">Google Ads Setup</option>
                             <option value="brand">Brand Design</option>
                             <option value="posters">Posters & Flyers</option>
                             <option value="social">Social Media</option>
@@ -584,6 +588,96 @@
                                     <option value="shopify">Shopify</option>
                                     <option value="woocommerce">WooCommerce</option>
                                     <option value="advice">Need advice</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="service-fields" data-service-fields="app" hidden>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="appType">APP TYPE *</label>
+                                <select id="appType" name="appType" data-required="true">
+                                    <option value="">Select app type</option>
+                                    <option value="ios-android">iOS and Android</option>
+                                    <option value="ios-only">iOS only</option>
+                                    <option value="android-only">Android only</option>
+                                    <option value="web-app">Web app</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="appStage">PROJECT STAGE *</label>
+                                <select id="appStage" name="appStage" data-required="true">
+                                    <option value="">Select project stage</option>
+                                    <option value="idea">New idea</option>
+                                    <option value="mvp">Need an MVP</option>
+                                    <option value="existing-app">Existing app needs upgrades</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="service-fields" data-service-fields="redevelopment" hidden>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="redevelopUrl">CURRENT WEBSITE URL *</label>
+                                <input type="url" id="redevelopUrl" name="redevelopUrl" placeholder="https://yourwebsite.com" data-required="true">
+                            </div>
+                            <div class="form-group">
+                                <label for="redevelopFocus">REDEVELOPMENT FOCUS *</label>
+                                <select id="redevelopFocus" name="redevelopFocus" data-required="true">
+                                    <option value="">Select focus</option>
+                                    <option value="design-refresh">Design refresh</option>
+                                    <option value="speed-seo">Speed and SEO improvements</option>
+                                    <option value="full-rebuild">Full rebuild</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="service-fields" data-service-fields="seo" hidden>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="seoGoal">SEO GOAL *</label>
+                                <select id="seoGoal" name="seoGoal" data-required="true">
+                                    <option value="">Select SEO goal</option>
+                                    <option value="local">Local SEO</option>
+                                    <option value="national">National SEO</option>
+                                    <option value="technical">Technical SEO fixes</option>
+                                    <option value="content">Content-led SEO growth</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="seoTimeline">EXPECTED RESULTS WINDOW *</label>
+                                <select id="seoTimeline" name="seoTimeline" data-required="true">
+                                    <option value="">Select expectation</option>
+                                    <option value="3-months">Within 3 months</option>
+                                    <option value="6-months">Within 6 months</option>
+                                    <option value="long-term">Long-term growth plan</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="service-fields" data-service-fields="googleads" hidden>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="adsBudget">MONTHLY ADS BUDGET *</label>
+                                <select id="adsBudget" name="adsBudget" data-required="true">
+                                    <option value="">Select monthly budget</option>
+                                    <option value="under-1000">Under GBP 1,000</option>
+                                    <option value="1000-3000">GBP 1,000 - GBP 3,000</option>
+                                    <option value="3000-plus">GBP 3,000+</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="adsGoal">PRIMARY CAMPAIGN GOAL *</label>
+                                <select id="adsGoal" name="adsGoal" data-required="true">
+                                    <option value="">Select campaign goal</option>
+                                    <option value="leads">Lead generation</option>
+                                    <option value="calls">Phone calls</option>
+                                    <option value="sales">Online sales</option>
+                                    <option value="awareness">Brand awareness</option>
                                 </select>
                             </div>
                         </div>
@@ -820,10 +914,12 @@
                     <h4>OUR SERVICES</h4>
                     <ul>
                         <li><a href="#services">Website Design</a></li>
+                        <li><a href="#services">Website Redevelopment</a></li>
                         <li><a href="#services">E-Commerce</a></li>
+                        <li><a href="#services">App Development</a></li>
+                        <li><a href="#services">SEO Setup</a></li>
+                        <li><a href="#services">Google Ads Setup</a></li>
                         <li><a href="#services">Brand Design</a></li>
-                        <li><a href="#services">Posters & Flyers</a></li>
-                        <li><a href="#services">Social Media</a></li>
                     </ul>
                 </div>
 
@@ -866,7 +962,7 @@
         </div>
     </footer>
 
-    <script src="js/main.js?v=20260503-7"></script>
+    <script src="js/main.js?v=20260503-8"></script>
     <!-- Cookie popup -->
     <div class="cookie-popup" id="cookiePopup" role="dialog" aria-labelledby="cookieTitle" aria-describedby="cookieDesc" aria-modal="true">
         <button class="cookie-close" id="cookieClose" aria-label="Close cookie dialog">✕</button>

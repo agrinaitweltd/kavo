@@ -110,18 +110,18 @@ function escapeHtml(value) {
 function buildEmailShell({ title, intro, detailRows, accentLabel, accentValue, ctaLabel, ctaHref, footerNote, siteUrl }) {
     const detailMarkup = detailRows.map((row) => `
         <tr>
-            <td style="padding: 0 0 8px; font-size: 12px; line-height: 18px; color: #8c8277; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase;">${escapeHtml(row.label)}</td>
-        </tr>
-        <tr>
-            <td style="padding: 0 0 18px; font-size: 15px; line-height: 24px; color: #262321;">${escapeHtml(row.value)}</td>
+            <td style="padding: 13px 0 12px; border-bottom: 1px solid #e9eaec;">
+                <div style="font-size: 11px; line-height: 16px; color: #6b7078; font-weight: 700; letter-spacing: 0.09em; text-transform: uppercase;">${escapeHtml(row.label)}</div>
+                <div style="margin-top: 5px; font-size: 15px; line-height: 24px; color: #111317;">${escapeHtml(row.value)}</div>
+            </td>
         </tr>
     `).join('');
 
     const ctaMarkup = ctaLabel && ctaHref
         ? `
             <tr>
-                <td style="padding: 8px 0 0;">
-                    <a href="${escapeHtml(ctaHref)}" style="display: inline-block; padding: 14px 28px; border-radius: 999px; background: #ff7a1a; color: #ffffff; font-size: 15px; font-weight: 700; line-height: 15px; text-decoration: none;">${escapeHtml(ctaLabel)}</a>
+                <td style="padding: 18px 0 0; text-align: center;">
+                    <a href="${escapeHtml(ctaHref)}" style="display: inline-block; padding: 13px 24px; border-radius: 999px; background: #111317; color: #ffffff; font-size: 13px; font-weight: 700; letter-spacing: 0.06em; line-height: 13px; text-transform: uppercase; text-decoration: none;">${escapeHtml(ctaLabel)}</a>
                 </td>
             </tr>
         `
@@ -135,45 +135,37 @@ function buildEmailShell({ title, intro, detailRows, accentLabel, accentValue, c
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>${escapeHtml(title)}</title>
 </head>
-<body style="margin: 0; padding: 0; background: #f4f0ea; font-family: Arial, Helvetica, sans-serif; color: #262321;">
-    <table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="background: #f4f0ea; margin: 0; padding: 24px 0;">
+<body style="margin: 0; padding: 0; background: #f2f3f5; font-family: Arial, Helvetica, sans-serif; color: #111317;">
+    <table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="background: #f2f3f5; margin: 0; padding: 28px 0;">
         <tr>
             <td align="center">
-                <table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="width: 100%; max-width: 640px; background: #ffffff; border-radius: 28px; overflow: hidden; box-shadow: 0 18px 50px rgba(21, 17, 13, 0.08);">
+                <table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="width: 100%; max-width: 640px; background: #ffffff; border: 1px solid #d8dce0; border-radius: 22px; overflow: hidden; box-shadow: 0 16px 38px rgba(18, 22, 28, 0.08);">
                     <tr>
-                        <td style="padding: 34px 32px 20px; text-align: center;">
+                        <td style="padding: 28px 32px 18px; text-align: center; border-bottom: 1px solid #eceff2;">
                             <img src="${escapeHtml(siteUrl)}/public/kavologo.png" alt="Kavo Tech" width="164" style="display: inline-block; max-width: 164px; width: 100%; height: auto;">
                         </td>
                     </tr>
                     <tr>
-                        <td style="padding: 0 32px;">
-                            <table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="background: linear-gradient(135deg, #ffd955 0%, #ffbc1a 56%, #fff1bf 100%); border-radius: 24px; overflow: hidden;">
-                                <tr>
-                                    <td style="padding: 28px 28px 88px; position: relative;">
-                                        <div style="display: inline-block; padding: 8px 14px; border-radius: 999px; background: rgba(255, 255, 255, 0.46); color: #6b4300; font-size: 12px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase;">${escapeHtml(accentLabel)}</div>
-                                        <div style="margin-top: 16px; font-size: 36px; line-height: 42px; font-weight: 800; color: #262321; max-width: 360px;">${escapeHtml(accentValue)}</div>
-                                        <div style="position: relative; margin-top: 26px; height: 74px; border-top-left-radius: 220px; border-top-right-radius: 220px; background: rgba(255, 255, 255, 0.84);"></div>
-                                        <div style="position: absolute; right: 28px; bottom: 24px; width: 88px; height: 88px; border-radius: 50%; background: #ff7a1a; box-shadow: 0 12px 18px rgba(255, 122, 26, 0.28);"></div>
-                                    </td>
-                                </tr>
-                            </table>
+                        <td style="padding: 26px 32px 0;">
+                            <div style="display: inline-block; padding: 7px 12px; border-radius: 999px; border: 1px solid #d4d8dd; color: #545b65; font-size: 11px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase;">${escapeHtml(accentLabel)}</div>
+                            <div style="margin-top: 12px; font-size: 30px; line-height: 36px; font-weight: 800; letter-spacing: -0.02em; color: #111317;">${escapeHtml(accentValue)}</div>
                         </td>
                     </tr>
                     <tr>
-                        <td style="padding: 30px 32px 8px; text-align: center;">
-                            <div style="font-size: 48px; line-height: 52px; font-weight: 800; color: #262321; letter-spacing: -0.03em;">${escapeHtml(title)}</div>
+                        <td style="padding: 26px 32px 6px;">
+                            <div style="font-size: 40px; line-height: 44px; font-weight: 800; color: #111317; letter-spacing: -0.03em;">${escapeHtml(title)}</div>
                         </td>
                     </tr>
                     <tr>
-                        <td style="padding: 0 32px 26px; text-align: center; font-size: 17px; line-height: 29px; color: #5f5852;">
+                        <td style="padding: 0 32px 22px; font-size: 16px; line-height: 27px; color: #4b525b;">
                             ${escapeHtml(intro)}
                         </td>
                     </tr>
                     <tr>
-                        <td style="padding: 0 32px 16px;">
-                            <table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="background: #fbf8f4; border: 1px solid #efe7dc; border-radius: 20px; padding: 24px;">
+                        <td style="padding: 0 32px 14px;">
+                            <table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="background: #f9fafb; border: 1px solid #e0e4e8; border-radius: 16px; padding: 18px 20px;">
                                 <tr>
-                                    <td style="font-size: 13px; line-height: 18px; color: #8c8277; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; padding: 0 0 16px;">Submission details</td>
+                                    <td style="font-size: 12px; line-height: 18px; color: #5e6670; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; padding: 0 0 4px;">Submission details</td>
                                 </tr>
                                 ${detailMarkup}
                             </table>
@@ -181,14 +173,14 @@ function buildEmailShell({ title, intro, detailRows, accentLabel, accentValue, c
                     </tr>
                     ${ctaMarkup}
                     <tr>
-                        <td style="padding: 28px 32px 10px; text-align: center; font-size: 14px; line-height: 24px; color: #7b736b;">
+                        <td style="padding: 24px 32px 8px; text-align: center; font-size: 13px; line-height: 22px; color: #69707a;">
                             ${escapeHtml(footerNote)}
                         </td>
                     </tr>
                     <tr>
-                        <td style="padding: 0 32px 32px; text-align: center; font-size: 13px; line-height: 22px; color: #a39a91;">
+                        <td style="padding: 0 32px 30px; text-align: center; font-size: 12px; line-height: 20px; color: #8a919b;">
                             Kavo Tech, London, United Kingdom<br>
-                            <a href="${escapeHtml(siteUrl)}" style="color: #ff7a1a; text-decoration: none;">${escapeHtml(siteUrl.replace(/^https?:\/\//, ''))}</a>
+                            <a href="${escapeHtml(siteUrl)}" style="color: #111317; text-decoration: none; font-weight: 700;">${escapeHtml(siteUrl.replace(/^https?:\/\//, ''))}</a>
                         </td>
                     </tr>
                 </table>

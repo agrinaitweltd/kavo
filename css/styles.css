@@ -166,7 +166,7 @@ img {
 }
 
 .footer-logo-img {
-    height: 170px;
+    height: 188px;
     width: auto;
     display: block;
 }
@@ -476,8 +476,9 @@ img {
     display: inline-block;
     opacity: 0;
     transform: translateY(0.9em) scale(0.96);
-    filter: blur(2px);
-    will-change: transform, opacity, filter;
+    will-change: transform, opacity;
+    backface-visibility: hidden;
+    -webkit-font-smoothing: antialiased;
 }
 
 .hero-title.word-animated.animated .word-unit {
@@ -558,12 +559,10 @@ img {
     from {
         opacity: 0;
         transform: translateY(0.9em) scale(0.96);
-        filter: blur(2px);
     }
     to {
         opacity: 1;
         transform: translateY(0) scale(1);
-        filter: blur(0);
     }
 }
 
@@ -956,6 +955,7 @@ img {
     align-items: center;
     gap: 34px;
     width: max-content;
+    will-change: transform;
 }
 
 .logos-track-forward {
@@ -1780,6 +1780,11 @@ img {
 
 .footer-logo {
     display: inline-block;
+    padding: 14px 18px;
+    border-radius: 14px;
+    background: #ffffff;
+    border: 1px solid rgba(255, 255, 255, 0.35);
+    box-shadow: 0 12px 28px rgba(0, 0, 0, 0.28);
 }
 
 .footer-cta {
@@ -2214,6 +2219,16 @@ img {
 
 /* Mobile */
 @media (max-width: 768px) {
+    .logo-item-simple {
+        min-width: 170px;
+        min-height: 76px;
+    }
+
+    .logo-item-simple img {
+        height: 46px;
+        max-width: 146px;
+    }
+
     .container {
         padding: 0 18px;
     }
@@ -2412,7 +2427,7 @@ img {
     }
 
     .footer-logo-img {
-        height: 138px;
+        height: 168px;
     }
 
     .section-title {
@@ -2477,14 +2492,14 @@ img {
     }
 
     .logo-item-simple {
-        min-width: 148px;
-        min-height: 66px;
-        padding: 8px 10px;
+        min-width: 166px;
+        min-height: 74px;
+        padding: 8px 12px;
     }
 
     .logo-item-simple img {
-        height: 38px;
-        max-width: 120px;
+        height: 50px;
+        max-width: 152px;
     }
 
     .logos-track-forward {
@@ -2496,7 +2511,7 @@ img {
     }
 
     .footer-logo-img {
-        height: 124px;
+        height: 150px;
     }
 
     /* Auto-gloss sweep on service cards */
