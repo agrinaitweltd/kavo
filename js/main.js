@@ -433,7 +433,7 @@ function initStatsSection() {
 
             rings.forEach((ring, index) => {
                 const target = Number(ring.dataset.targetValue || 0);
-                setTimeout(() => animateStatRing(ring, target, 1200, 380), index * 150);
+                setTimeout(() => animateStatRing(ring, target, 1500), index * 130);
             });
 
             observer.unobserve(entry.target);
@@ -445,7 +445,7 @@ function initStatsSection() {
     observer.observe(section);
 }
 
-function animateStatRing(ring, target, duration, loadingDelay) {
+function animateStatRing(ring, target, duration) {
     const valueElement = ring.querySelector('.stat-ring-value');
     const startTime = performance.now();
 
@@ -455,11 +455,11 @@ function animateStatRing(ring, target, duration, loadingDelay) {
     function tick(now) {
         const progress = Math.min((now - startTime) / duration, 1);
         const eased = 1 - Math.pow(1 - progress, 3);
-        const value = Math.round(target * eased);
+        const value = target * eased;
 
-        ring.style.setProperty('--stat-progress', String(value));
+        ring.style.setProperty('--stat-progress', value.toFixed(2));
         if (valueElement) {
-            valueElement.textContent = `${value}%`;
+            valueElement.textContent = `${Math.round(value)}%`;
         }
 
         if (progress < 1) {
@@ -467,10 +467,14 @@ function animateStatRing(ring, target, duration, loadingDelay) {
         } else {
             ring.classList.remove('is-loading');
             ring.classList.add('is-loaded');
+            ring.style.setProperty('--stat-progress', String(target));
+            if (valueElement) {
+                valueElement.textContent = `${target}%`;
+            }
         }
     }
 
-    setTimeout(() => requestAnimationFrame(tick), loadingDelay);
+    requestAnimationFrame(tick);
 }
 
 function getFormPayload(form) {

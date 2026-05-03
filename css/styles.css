@@ -1291,6 +1291,7 @@ img {
     --ring-bg: #d9d9d9;
     --ring-size: 182px;
     --ring-thickness: 4px;
+    --ring-head-size: 2.5%;
     --stat-progress: var(--stat-value);
     width: var(--ring-size);
     height: var(--ring-size);
@@ -1305,27 +1306,51 @@ img {
     transition: transform 0.25s ease;
 }
 
+.stat-ring::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: 50%;
+    background: conic-gradient(
+        transparent 0,
+        transparent calc((var(--stat-progress) * 1%) - var(--ring-head-size)),
+        rgba(25, 163, 188, 0.95) calc((var(--stat-progress) * 1%) - var(--ring-head-size)),
+        rgba(25, 163, 188, 0.95) calc(var(--stat-progress) * 1%),
+        transparent calc(var(--stat-progress) * 1%),
+        transparent 100%
+    );
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.2s ease;
+}
+
 .stat-ring::after {
     content: '';
     position: absolute;
-    inset: -3px;
+    inset: -2px;
     border-radius: 50%;
-    border: 3px solid transparent;
-    border-top-color: rgba(25, 163, 188, 0.95);
-    border-right-color: rgba(25, 163, 188, 0.45);
+    border: 2px solid rgba(25, 163, 188, 0.22);
+    box-shadow: 0 0 0 0 rgba(25, 163, 188, 0.2);
     opacity: 0;
-    transform: rotate(0deg);
     transition: opacity 0.2s ease;
     pointer-events: none;
 }
 
+.stat-ring.is-loading::before {
+    opacity: 1;
+}
+
 .stat-ring.is-loading::after {
     opacity: 1;
-    animation: stat-ring-spin 0.75s linear infinite;
+    animation: stat-ring-glow 0.9s ease-in-out infinite;
 }
 
 .stat-ring.is-loaded {
-    animation: stat-ring-settle 0.25s ease;
+    animation: stat-ring-settle 0.25s ease, stat-ring-loaded-pulse 2.4s ease-in-out 0.25s infinite;
+}
+
+.stat-ring.is-loaded::before {
+    opacity: 0.55;
 }
 
 .stat-circle-card:hover .stat-ring {
@@ -1363,9 +1388,13 @@ img {
     }
 }
 
-@keyframes stat-ring-spin {
-    to {
-        transform: rotate(360deg);
+@keyframes stat-ring-glow {
+    0%,
+    100% {
+        box-shadow: 0 0 0 0 rgba(25, 163, 188, 0.14);
+    }
+    50% {
+        box-shadow: 0 0 0 6px rgba(25, 163, 188, 0);
     }
 }
 
@@ -1375,6 +1404,16 @@ img {
     }
     100% {
         transform: scale(1);
+    }
+}
+
+@keyframes stat-ring-loaded-pulse {
+    0%,
+    100% {
+        filter: saturate(1) brightness(1);
+    }
+    50% {
+        filter: saturate(1.08) brightness(1.05);
     }
 }
 
@@ -1488,6 +1527,20 @@ img {
 
 .form-submit {
     text-align: center;
+}
+
+.recaptcha-disclaimer {
+    margin: 14px 0 0;
+    text-align: center;
+    font-size: 0.78rem;
+    line-height: 1.45;
+    color: var(--gray-500);
+}
+
+.recaptcha-disclaimer a {
+    color: var(--gray-700);
+    text-decoration: underline;
+    text-underline-offset: 2px;
 }
 
 .form-helper {
