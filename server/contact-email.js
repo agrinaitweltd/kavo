@@ -32,10 +32,9 @@ function validateSubmission(payload) {
     const phone = (payload.phone || '').trim();
     const companyName = (payload.companyName || '').trim();
     const service = (payload.service || '').trim();
-    const website = (payload.website || '').trim();
+    const serviceAnswers = Array.isArray(payload.serviceAnswers) ? payload.serviceAnswers : [];
     const budget = (payload.budget || '').trim();
     const timeline = (payload.timeline || '').trim();
-    const preferredContact = (payload.preferredContact || '').trim();
     const referralSource = (payload.referralSource || '').trim();
     const message = (payload.message || '').trim();
     const consent = Boolean(payload.consent);
@@ -47,7 +46,7 @@ function validateSubmission(payload) {
         return { ok: false, status: 200, message: 'Submission accepted.' };
     }
 
-    if (!name || !email || !service || !budget || !timeline || !preferredContact || !message) {
+    if (!name || !email || !service || !budget || !timeline || !message) {
         return { ok: false, status: 400, message: 'Missing required fields.' };
     }
 
@@ -55,8 +54,8 @@ function validateSubmission(payload) {
         return { ok: false, status: 400, message: 'Invalid email address.' };
     }
 
-    if (website && !/^https?:\/\//i.test(website)) {
-        return { ok: false, status: 400, message: 'Invalid website URL.' };
+    if (!serviceAnswers.length) {
+        return { ok: false, status: 400, message: 'Service questions are required.' };
     }
 
     if (message.length < 10) {
@@ -79,14 +78,24 @@ function validateSubmission(payload) {
             phone,
             companyName,
             service,
-            website,
+            serviceAnswers: serviceAnswers
+                .map((entry) => ({
+                    label: String(entry.label || '').trim(),
+                    value: String(entry.value || '').trim()
+                }))
+                .filter((entry) => entry.label && entry.value),
             budget,
             timeline,
-            preferredContact,
             referralSource,
             message
         }
     };
+}
+
+function formatServiceAnswers(answers) {
+    return answers
+        .map((entry) => `${entry.label}: ${entry.value}`)
+        .join(' | ');
 }
 
 function escapeHtml(value) {
@@ -200,10 +209,9 @@ function buildUserEmail(data, siteUrl) {
             { label: 'Phone', value: data.phone || 'Not provided' },
             { label: 'Company', value: data.companyName || 'Not provided' },
             { label: 'Service', value: data.service },
-            { label: 'Website', value: data.website || 'Not provided' },
+            { label: 'Service brief', value: formatServiceAnswers(data.serviceAnswers) || 'Not provided' },
             { label: 'Budget', value: data.budget },
             { label: 'Timeline', value: data.timeline },
-            { label: 'Preferred contact', value: data.preferredContact },
             { label: 'Lead source', value: data.referralSource || 'Not provided' },
             { label: 'Message', value: data.message }
         ],
@@ -226,10 +234,9 @@ function buildAdminEmail(data, siteUrl) {
             { label: 'Phone', value: data.phone || 'Not provided' },
             { label: 'Company', value: data.companyName || 'Not provided' },
             { label: 'Service', value: data.service },
-            { label: 'Website', value: data.website || 'Not provided' },
+            { label: 'Service brief', value: formatServiceAnswers(data.serviceAnswers) || 'Not provided' },
             { label: 'Budget', value: data.budget },
             { label: 'Timeline', value: data.timeline },
-            { label: 'Preferred contact', value: data.preferredContact },
             { label: 'Lead source', value: data.referralSource || 'Not provided' },
             { label: 'Message', value: data.message }
         ],
@@ -265,10 +272,9 @@ async function sendContactEmails(submission) {
                 `Phone: ${submission.phone || 'Not provided'}`,
                 `Company: ${submission.companyName || 'Not provided'}`,
                 `Service: ${submission.service}`,
-                `Website: ${submission.website || 'Not provided'}`,
+                `Service brief: ${formatServiceAnswers(submission.serviceAnswers) || 'Not provided'}`,
                 `Budget: ${submission.budget}`,
                 `Timeline: ${submission.timeline}`,
-                `Preferred contact: ${submission.preferredContact}`,
                 `Lead source: ${submission.referralSource || 'Not provided'}`,
                 `Message: ${submission.message}`
             ].join('\n')
@@ -287,10 +293,9 @@ async function sendContactEmails(submission) {
                 `Phone: ${submission.phone || 'Not provided'}`,
                 `Company: ${submission.companyName || 'Not provided'}`,
                 `Service: ${submission.service}`,
-                `Website: ${submission.website || 'Not provided'}`,
+                `Service brief: ${formatServiceAnswers(submission.serviceAnswers) || 'Not provided'}`,
                 `Budget: ${submission.budget}`,
                 `Timeline: ${submission.timeline}`,
-                `Preferred contact: ${submission.preferredContact}`,
                 `Lead source: ${submission.referralSource || 'Not provided'}`,
                 `Message: ${submission.message}`
             ].join('\n')

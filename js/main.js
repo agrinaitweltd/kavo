@@ -280,6 +280,7 @@ function initFormHandling() {
     const submitLabel = form.querySelector('.quote-submit-label');
     const statusElement = form.querySelector('.form-status');
     const startedAtField = form.querySelector('#formStartedAt');
+    const syncServiceFields = initServiceAdaptiveFields(form);
 
     if (startedAtField) {
         startedAtField.value = String(Date.now());
@@ -287,6 +288,14 @@ function initFormHandling() {
 
     form.addEventListener('submit', async (e) => {
         e.preventDefault();
+
+        syncServiceFields();
+
+        if (!form.checkValidity()) {
+            form.reportValidity();
+            updateFormStatus(statusElement, 'Please complete all required fields.', 'error');
+            return;
+        }
 
         const payload = getFormPayload(form);
         const validationError = validateFormPayload(payload);
@@ -336,19 +345,19 @@ function getFormPayload(form) {
     const serviceSelect = form.querySelector('#service');
     const budgetSelect = form.querySelector('#budget');
     const timelineSelect = form.querySelector('#timeline');
-    const preferredContactSelect = form.querySelector('#preferredContact');
     const referralSelect = form.querySelector('#referralSource');
+    const serviceOption = serviceSelect?.options[serviceSelect.selectedIndex];
 
     return {
         name: form.querySelector('#name')?.value.trim() || '',
         email: form.querySelector('#email')?.value.trim() || '',
         phone: form.querySelector('#phone')?.value.trim() || '',
         companyName: form.querySelector('#companyName')?.value.trim() || '',
-        service: serviceSelect?.options[serviceSelect.selectedIndex]?.text?.trim() || '',
-        website: form.querySelector('#website')?.value.trim() || '',
+        serviceKey: serviceOption?.value || '',
+        service: serviceOption?.text?.trim() || '',
+        serviceAnswers: getActiveServiceAnswers(form),
         budget: budgetSelect?.options[budgetSelect.selectedIndex]?.text?.trim() || '',
         timeline: timelineSelect?.options[timelineSelect.selectedIndex]?.text?.trim() || '',
-        preferredContact: preferredContactSelect?.options[preferredContactSelect.selectedIndex]?.text?.trim() || '',
         referralSource: referralSelect?.options[referralSelect.selectedIndex]?.text?.trim() || '',
         message: form.querySelector('#details')?.value.trim() || '',
         consent: form.querySelector('#consent')?.checked || false,
@@ -357,9 +366,72 @@ function getFormPayload(form) {
     };
 }
 
+function getActiveServiceAnswers(form) {
+    const activeGroup = form.querySelector('.service-fields:not([hidden])');
+    if (!activeGroup) return [];
+
+    const fields = Array.from(activeGroup.querySelectorAll('input, select, textarea'));
+
+    return fields
+        .map((field) => {
+            const labelElement = field.closest('.form-group')?.querySelector('label');
+            let value = '';
+
+            if (field.tagName === 'SELECT') {
+                value = field.options[field.selectedIndex]?.text?.trim() || '';
+            } else if (field.type === 'checkbox') {
+                value = field.checked ? 'Yes' : 'No';
+            } else {
+                value = field.value.trim();
+            }
+
+            const label = (labelElement?.textContent || '')
+                .replace('*', '')
+                .trim();
+
+            return {
+                label,
+                value
+            };
+        })
+        .filter((entry) => entry.label && entry.value);
+}
+
+function initServiceAdaptiveFields(form) {
+    const serviceSelect = form.querySelector('#service');
+    const groups = Array.from(form.querySelectorAll('.service-fields'));
+
+    function sync() {
+        const selectedService = serviceSelect?.value || '';
+
+        groups.forEach((group) => {
+            const isActive = group.getAttribute('data-service-fields') === selectedService;
+            group.hidden = !isActive;
+
+            const fields = group.querySelectorAll('input, select, textarea');
+            fields.forEach((field) => {
+                const isRequired = field.dataset.required === 'true';
+                field.disabled = !isActive;
+                field.required = isActive && isRequired;
+            });
+        });
+    }
+
+    if (serviceSelect) {
+        serviceSelect.addEventListener('change', sync);
+    }
+
+    sync();
+    return sync;
+}
+
 function validateFormPayload(payload) {
-    if (!payload.name || !payload.email || !payload.service || !payload.budget || !payload.timeline || !payload.preferredContact || !payload.message) {
+    if (!payload.name || !payload.email || !payload.service || !payload.budget || !payload.timeline || !payload.message) {
         return 'Please complete all required fields.';
+    }
+
+    if (!payload.serviceAnswers.length) {
+        return 'Please answer the service-specific questions.';
     }
 
     if (!EMAIL_PATTERN.test(payload.email)) {
@@ -368,10 +440,6 @@ function validateFormPayload(payload) {
 
     if (payload.message.length < 10) {
         return 'Please provide a bit more detail about your project.';
-    }
-
-    if (payload.website && !/^https?:\/\//i.test(payload.website)) {
-        return 'Please enter your website using https://';
     }
 
     if (!payload.consent) {
