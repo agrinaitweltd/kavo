@@ -1240,6 +1240,81 @@ img {
 }
 
 /* ========================================
+   Stats Section
+   ======================================== */
+.stats-section {
+    padding: 100px 0;
+    background: #f3f3f3;
+}
+
+.stats-header {
+    text-align: center;
+    margin-bottom: 44px;
+}
+
+.stats-divider {
+    width: 180px;
+    height: 2px;
+    background: var(--gray-300);
+    margin: 0 auto 26px;
+}
+
+.stats-title {
+    font-family: var(--font-primary);
+    font-size: clamp(1.65rem, 3vw, 2.2rem);
+    font-weight: 500;
+    letter-spacing: 6px;
+    color: #222;
+}
+
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    gap: 28px;
+    align-items: start;
+}
+
+.stat-circle-card {
+    text-align: center;
+}
+
+.stat-ring {
+    --ring-color: #19a3bc;
+    --ring-bg: #d9d9d9;
+    --ring-size: 182px;
+    --ring-thickness: 4px;
+    width: var(--ring-size);
+    height: var(--ring-size);
+    margin: 0 auto 20px;
+    border-radius: 50%;
+    display: grid;
+    place-items: center;
+    background:
+        radial-gradient(closest-side, #f3f3f3 calc(100% - var(--ring-thickness)), transparent 0 100%),
+        conic-gradient(var(--ring-color) calc(var(--stat-value) * 1%), var(--ring-bg) 0);
+}
+
+.stat-ring-value {
+    font-family: var(--font-primary);
+    font-size: clamp(2rem, 2.1vw, 2.5rem);
+    font-weight: 800;
+    letter-spacing: 0.5px;
+    color: #17191d;
+}
+
+.stat-ring-label {
+    font-family: var(--font-primary);
+    max-width: 200px;
+    margin: 0 auto;
+    font-size: 0.8rem;
+    font-weight: 500;
+    line-height: 1.45;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    color: #5f6770;
+}
+
+/* ========================================
    Quote / Contact Section
    ======================================== */
 .quote-section {
@@ -2090,6 +2165,20 @@ img {
         grid-template-columns: 1fr;
     }
 
+    .stats-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 24px 18px;
+    }
+
+    .stat-ring {
+        --ring-size: 162px;
+    }
+
+    .stat-ring-label {
+        letter-spacing: 2.5px;
+        font-size: 0.75rem;
+    }
+
     .form-row {
         grid-template-columns: 1fr;
     }
@@ -2302,6 +2391,18 @@ img {
     .mob-card {
         opacity: 1;
         transform: none;
+    }
+
+    .stats-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .stats-title {
+        letter-spacing: 4px;
+    }
+
+    .stat-ring {
+        --ring-size: 178px;
     }
 
     .word-unit {
