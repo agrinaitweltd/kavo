@@ -387,6 +387,8 @@ function initStatsSection() {
 
         ring.dataset.targetValue = String(target);
         ring.style.setProperty('--stat-progress', '0');
+        ring.classList.add('is-loading');
+        ring.classList.remove('is-loaded');
 
         if (valueElement) {
             valueElement.textContent = '0%';
@@ -398,6 +400,8 @@ function initStatsSection() {
             const target = Number(ring.dataset.targetValue || 0);
             const valueElement = ring.querySelector('.stat-ring-value');
             ring.style.setProperty('--stat-progress', String(target));
+            ring.classList.remove('is-loading');
+            ring.classList.add('is-loaded');
             if (valueElement) {
                 valueElement.textContent = `${target}%`;
             }
@@ -411,7 +415,7 @@ function initStatsSection() {
 
             rings.forEach((ring, index) => {
                 const target = Number(ring.dataset.targetValue || 0);
-                setTimeout(() => animateStatRing(ring, target, 1300), index * 120);
+                setTimeout(() => animateStatRing(ring, target, 1200, 380), index * 150);
             });
 
             observer.unobserve(entry.target);
@@ -423,9 +427,12 @@ function initStatsSection() {
     observer.observe(section);
 }
 
-function animateStatRing(ring, target, duration) {
+function animateStatRing(ring, target, duration, loadingDelay) {
     const valueElement = ring.querySelector('.stat-ring-value');
     const startTime = performance.now();
+
+    ring.classList.add('is-loading');
+    ring.classList.remove('is-loaded');
 
     function tick(now) {
         const progress = Math.min((now - startTime) / duration, 1);
@@ -439,10 +446,13 @@ function animateStatRing(ring, target, duration) {
 
         if (progress < 1) {
             requestAnimationFrame(tick);
+        } else {
+            ring.classList.remove('is-loading');
+            ring.classList.add('is-loaded');
         }
     }
 
-    requestAnimationFrame(tick);
+    setTimeout(() => requestAnimationFrame(tick), loadingDelay);
 }
 
 function getFormPayload(form) {
