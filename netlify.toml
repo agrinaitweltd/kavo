@@ -1,6 +1,14 @@
 [build]
   publish = "."
 
+[functions]
+  directory = "netlify/functions"
+
+[[redirects]]
+  from = "/api/contact"
+  to = "/.netlify/functions/contact"
+  status = 200
+
 [[headers]]
   for = "/robots.txt"
   [headers.values]

@@ -18,6 +18,8 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 const WHATSAPP_NUMBER = '447451267226';
+const CONTACT_API_ENDPOINT = '/api/contact';
+const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 function openWhatsApp(message) {
     const encoded = encodeURIComponent(message);
@@ -274,83 +276,127 @@ function initFormHandling() {
     const form = document.querySelector('.quote-form');
     if (!form) return;
 
-    form.addEventListener('submit', (e) => {
+    const submitButton = form.querySelector('button[type="submit"]');
+    const submitLabel = form.querySelector('.quote-submit-label');
+    const statusElement = form.querySelector('.form-status');
+    const startedAtField = form.querySelector('#formStartedAt');
+
+    if (startedAtField) {
+        startedAtField.value = String(Date.now());
+    }
+
+    form.addEventListener('submit', async (e) => {
         e.preventDefault();
 
-        if (!form.checkValidity()) {
-            form.reportValidity();
+        const payload = getFormPayload(form);
+        const validationError = validateFormPayload(payload);
+
+        if (validationError) {
+            updateFormStatus(statusElement, validationError, 'error');
             return;
         }
 
-        const name = form.querySelector('#name')?.value.trim() || 'Not provided';
-        const email = form.querySelector('#email')?.value.trim() || 'Not provided';
-        const phone = form.querySelector('#phone')?.value.trim() || 'Not provided';
-        const serviceSelect = form.querySelector('#service');
-        const service = serviceSelect?.options[serviceSelect.selectedIndex]?.text || 'Not provided';
-        const details = form.querySelector('#details')?.value.trim() || 'Not provided';
+        setFormPending(submitButton, submitLabel, true);
+        updateFormStatus(statusElement, 'Sending your message...', 'pending');
 
-        const message = [
-            'Hi Kavo Tech, I want to get started with this service request:',
-            '',
-            `Service: ${service}`,
-            `Name: ${name}`,
-            `Email: ${email}`,
-            `Phone: ${phone}`,
-            `Project details: ${details}`
-        ].join('\n');
+        try {
+            const response = await fetch(CONTACT_API_ENDPOINT, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(payload)
+            });
 
-        // Show contact method dialog
-        showContactMethodDialog(message, email, name, service);
-    });
-}
+            const result = await response.json().catch(() => ({}));
 
-function showContactMethodDialog(message, userEmail, userName, service) {
-    // Create modal backdrop
-    const backdrop = document.createElement('div');
-    backdrop.style.cssText = 'position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); display: flex; align-items: center; justify-content: center; z-index: 10000;';
-    
-    // Create modal dialog
-    const dialog = document.createElement('div');
-    dialog.style.cssText = 'background: white; padding: 40px; border-radius: 8px; max-width: 400px; text-align: center; box-shadow: 0 10px 40px rgba(0,0,0,0.2);';
-    
-    dialog.innerHTML = `
-        <h3 style="margin: 0 0 20px 0; font-size: 20px; color: #000;">How would you like to proceed?</h3>
-        <p style="margin: 0 0 30px 0; color: #666; font-size: 14px;">Choose your preferred contact method</p>
-        <div style="display: flex; gap: 10px;">
-            <button class="contact-btn whatsapp-btn" style="flex: 1; padding: 12px; border: none; border-radius: 6px; background: #25D366; color: white; font-weight: 600; cursor: pointer; font-size: 14px;">WhatsApp</button>
-            <button class="contact-btn email-btn" style="flex: 1; padding: 12px; border: none; border-radius: 6px; background: #000; color: white; font-weight: 600; cursor: pointer; font-size: 14px;">Email</button>
-        </div>
-    `;
-    
-    backdrop.appendChild(dialog);
-    document.body.appendChild(backdrop);
-    
-    // WhatsApp button handler
-    dialog.querySelector('.whatsapp-btn').addEventListener('click', () => {
-        document.body.removeChild(backdrop);
-        openWhatsApp(message);
-    });
-    
-    // Email button handler
-    dialog.querySelector('.email-btn').addEventListener('click', () => {
-        document.body.removeChild(backdrop);
-        sendViaEmail(userEmail, userName, service, message);
-    });
-    
-    // Close on backdrop click
-    backdrop.addEventListener('click', (e) => {
-        if (e.target === backdrop) {
-            document.body.removeChild(backdrop);
+            if (!response.ok || !result.success) {
+                throw new Error(result.error || 'We could not send your message right now. Please try again shortly.');
+            }
+
+            form.reset();
+            if (startedAtField) {
+                startedAtField.value = String(Date.now());
+            }
+            updateFormStatus(statusElement, result.message || 'Thanks. Your message has been sent successfully.', 'success');
+        } catch (error) {
+            console.error('Contact form submission failed:', error);
+            updateFormStatus(
+                statusElement,
+                error instanceof Error ? error.message : 'We could not send your message right now. Please try again shortly.',
+                'error'
+            );
+        } finally {
+            setFormPending(submitButton, submitLabel, false);
         }
     });
 }
 
-function sendViaEmail(userEmail, userName, service, message) {
-    const supportEmail = 'info@kavotech.uk';
-    const subject = encodeURIComponent(`Service Inquiry from ${userName} - ${service}`);
-    const body = encodeURIComponent(message);
-    
-    window.location.href = `mailto:${supportEmail}?subject=${subject}&body=${body}`;
+function getFormPayload(form) {
+    const serviceSelect = form.querySelector('#service');
+    const budgetSelect = form.querySelector('#budget');
+    const timelineSelect = form.querySelector('#timeline');
+    const preferredContactSelect = form.querySelector('#preferredContact');
+    const referralSelect = form.querySelector('#referralSource');
+
+    return {
+        name: form.querySelector('#name')?.value.trim() || '',
+        email: form.querySelector('#email')?.value.trim() || '',
+        phone: form.querySelector('#phone')?.value.trim() || '',
+        companyName: form.querySelector('#companyName')?.value.trim() || '',
+        service: serviceSelect?.options[serviceSelect.selectedIndex]?.text?.trim() || '',
+        website: form.querySelector('#website')?.value.trim() || '',
+        budget: budgetSelect?.options[budgetSelect.selectedIndex]?.text?.trim() || '',
+        timeline: timelineSelect?.options[timelineSelect.selectedIndex]?.text?.trim() || '',
+        preferredContact: preferredContactSelect?.options[preferredContactSelect.selectedIndex]?.text?.trim() || '',
+        referralSource: referralSelect?.options[referralSelect.selectedIndex]?.text?.trim() || '',
+        message: form.querySelector('#details')?.value.trim() || '',
+        consent: form.querySelector('#consent')?.checked || false,
+        honeypot: form.querySelector('#websiteTrap')?.value.trim() || '',
+        formStartedAt: form.querySelector('#formStartedAt')?.value || ''
+    };
+}
+
+function validateFormPayload(payload) {
+    if (!payload.name || !payload.email || !payload.service || !payload.budget || !payload.timeline || !payload.preferredContact || !payload.message) {
+        return 'Please complete all required fields.';
+    }
+
+    if (!EMAIL_PATTERN.test(payload.email)) {
+        return 'Please enter a valid email address.';
+    }
+
+    if (payload.message.length < 10) {
+        return 'Please provide a bit more detail about your project.';
+    }
+
+    if (payload.website && !/^https?:\/\//i.test(payload.website)) {
+        return 'Please enter your website using https://';
+    }
+
+    if (!payload.consent) {
+        return 'Please confirm consent so we can respond to your enquiry.';
+    }
+
+    return '';
+}
+
+function setFormPending(button, label, isPending) {
+    if (!button) return;
+
+    button.disabled = isPending;
+    button.setAttribute('aria-busy', String(isPending));
+
+    if (label) {
+        label.textContent = isPending ? 'SENDING...' : 'SEND MESSAGE';
+    }
+}
+
+function updateFormStatus(element, message, state) {
+    if (!element) return;
+
+    element.textContent = message;
+    element.dataset.state = state;
 }
 
 // ========================================
@@ -447,6 +493,7 @@ function initCookiePopup() {
 // ========================================
 function initMobileCardAnimations() {
     if (window.innerWidth > 768) return;
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
 
     // Make grid wrappers instantly visible so per-card animations drive the entrance
     document.querySelectorAll(
@@ -477,13 +524,13 @@ function initMobileCardAnimations() {
 
         byParent.forEach(siblings => {
             siblings.forEach((card, i) => {
-                setTimeout(() => card.classList.add('mob-in'), i * 90);
+                setTimeout(() => card.classList.add('mob-in'), i * 70);
                 observer.unobserve(card);
             });
         });
     }, {
-        threshold: 0.08,
-        rootMargin: '0px 0px -20px 0px'
+        threshold: 0.1,
+        rootMargin: '0px 0px -40px 0px'
     });
 
     cards.forEach(card => observer.observe(card));
