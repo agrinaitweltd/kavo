@@ -1276,13 +1276,22 @@ img {
 
 .stat-circle-card {
     text-align: center;
+    opacity: 0;
+    transform: translateY(14px);
+    animation: stat-card-in 0.55s ease forwards;
 }
+
+.stat-circle-card:nth-child(2) { animation-delay: 0.08s; }
+.stat-circle-card:nth-child(3) { animation-delay: 0.16s; }
+.stat-circle-card:nth-child(4) { animation-delay: 0.24s; }
+.stat-circle-card:nth-child(5) { animation-delay: 0.32s; }
 
 .stat-ring {
     --ring-color: #19a3bc;
     --ring-bg: #d9d9d9;
     --ring-size: 182px;
     --ring-thickness: 4px;
+    --stat-progress: var(--stat-value);
     width: var(--ring-size);
     height: var(--ring-size);
     margin: 0 auto 20px;
@@ -1291,7 +1300,12 @@ img {
     place-items: center;
     background:
         radial-gradient(closest-side, #f3f3f3 calc(100% - var(--ring-thickness)), transparent 0 100%),
-        conic-gradient(var(--ring-color) calc(var(--stat-value) * 1%), var(--ring-bg) 0);
+        conic-gradient(var(--ring-color) calc(var(--stat-progress) * 1%), var(--ring-bg) 0);
+    transition: transform 0.25s ease;
+}
+
+.stat-circle-card:hover .stat-ring {
+    transform: translateY(-4px) scale(1.02);
 }
 
 .stat-ring-value {
@@ -1312,6 +1326,17 @@ img {
     letter-spacing: 4px;
     text-transform: uppercase;
     color: #5f6770;
+}
+
+@keyframes stat-card-in {
+    from {
+        opacity: 0;
+        transform: translateY(14px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }
 
 /* ========================================

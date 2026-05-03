@@ -11,6 +11,7 @@ document.addEventListener('DOMContentLoaded', () => {
     initMobileCardAnimations();
     initSmoothScroll();
     initCounterAnimations();
+    initStatsSection();
     initWhatsAppCtas();
     initFormHandling();
     initCookiePopup();
@@ -320,7 +321,7 @@ function initFormHandling() {
             const result = await response.json().catch(() => ({}));
 
             if (!response.ok || !result.success) {
-                throw new Error(result.error || 'We could not send your message right now. Please try again shortly.');
+                throw new Error(getContactErrorMessage(response.status, result.error));
             }
 
             form.reset();
@@ -330,15 +331,118 @@ function initFormHandling() {
             updateFormStatus(statusElement, result.message || 'Thanks. Your message has been sent successfully.', 'success');
         } catch (error) {
             console.error('Contact form submission failed:', error);
+
+            const fallbackMessage = error instanceof TypeError
+                ? 'Network error while sending your message. Please check your connection and try again.'
+                : 'We could not send your message right now. Please try again shortly.';
+
             updateFormStatus(
                 statusElement,
-                error instanceof Error ? error.message : 'We could not send your message right now. Please try again shortly.',
+                error instanceof Error ? error.message : fallbackMessage,
                 'error'
             );
         } finally {
             setFormPending(submitButton, submitLabel, false);
         }
     });
+}
+
+function getContactErrorMessage(statusCode, fallback) {
+    if (statusCode === 400) {
+        return fallback || 'Please complete all required form fields and try again.';
+    }
+
+    if (statusCode === 404) {
+        return 'Contact endpoint is unavailable on this deployment. Please redeploy serverless functions or contact support.';
+    }
+
+    if (statusCode === 405) {
+        return 'Invalid request method for contact form submission.';
+    }
+
+    if (statusCode === 429) {
+        return 'Submission blocked. Please wait a moment and try again.';
+    }
+
+    if (statusCode >= 500) {
+        return fallback || 'Email service is currently unavailable. Please try again shortly.';
+    }
+
+    return fallback || 'We could not send your message right now. Please try again shortly.';
+}
+
+function initStatsSection() {
+    const section = document.querySelector('.stats-section');
+    if (!section) return;
+
+    const rings = section.querySelectorAll('.stat-ring');
+    if (!rings.length) return;
+
+    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    rings.forEach((ring) => {
+        const rawValue = Number(ring.style.getPropertyValue('--stat-value')) || 0;
+        const target = Math.max(0, Math.min(rawValue, 100));
+        const valueElement = ring.querySelector('.stat-ring-value');
+
+        ring.dataset.targetValue = String(target);
+        ring.style.setProperty('--stat-progress', '0');
+
+        if (valueElement) {
+            valueElement.textContent = '0%';
+        }
+    });
+
+    if (prefersReducedMotion) {
+        rings.forEach((ring) => {
+            const target = Number(ring.dataset.targetValue || 0);
+            const valueElement = ring.querySelector('.stat-ring-value');
+            ring.style.setProperty('--stat-progress', String(target));
+            if (valueElement) {
+                valueElement.textContent = `${target}%`;
+            }
+        });
+        return;
+    }
+
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach((entry) => {
+            if (!entry.isIntersecting) return;
+
+            rings.forEach((ring, index) => {
+                const target = Number(ring.dataset.targetValue || 0);
+                setTimeout(() => animateStatRing(ring, target, 1300), index * 120);
+            });
+
+            observer.unobserve(entry.target);
+        });
+    }, {
+        threshold: 0.35
+    });
+
+    observer.observe(section);
+}
+
+function animateStatRing(ring, target, duration) {
+    const valueElement = ring.querySelector('.stat-ring-value');
+    const startTime = performance.now();
+
+    function tick(now) {
+        const progress = Math.min((now - startTime) / duration, 1);
+        const eased = 1 - Math.pow(1 - progress, 3);
+        const value = Math.round(target * eased);
+
+        ring.style.setProperty('--stat-progress', String(value));
+        if (valueElement) {
+            valueElement.textContent = `${value}%`;
+        }
+
+        if (progress < 1) {
+            requestAnimationFrame(tick);
+        }
+    }
+
+    requestAnimationFrame(tick);
 }
 
 function getFormPayload(form) {
