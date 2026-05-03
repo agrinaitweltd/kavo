@@ -328,7 +328,21 @@ function initFormHandling() {
             if (startedAtField) {
                 startedAtField.value = String(Date.now());
             }
-            updateFormStatus(statusElement, result.message || 'Thanks. Your message has been sent successfully.', 'success');
+            if (typeof grecaptcha !== 'undefined') { grecaptcha.reset(); }
+
+            // Show thank-you screen
+            const successScreen = document.getElementById('formSuccessScreen');
+            const successBody = document.getElementById('formSuccessBody');
+            if (successScreen) {
+                if (successBody && payload.name) {
+                    successBody.textContent = `Thanks ${payload.name}, we\u2019ll be in touch within 24 hours.`;
+                }
+                form.hidden = true;
+                successScreen.hidden = false;
+                successScreen.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+            } else {
+                updateFormStatus(statusElement, result.message || 'Thanks. Your message has been sent successfully.', 'success');
+            }
         } catch (error) {
             console.error('Contact form submission failed:', error);
 
@@ -341,6 +355,7 @@ function initFormHandling() {
                 error instanceof Error ? error.message : fallbackMessage,
                 'error'
             );
+            if (typeof grecaptcha !== 'undefined') { grecaptcha.reset(); }
         } finally {
             setFormPending(submitButton, submitLabel, false);
         }
@@ -476,7 +491,8 @@ function getFormPayload(form) {
         message: form.querySelector('#details')?.value.trim() || '',
         consent: form.querySelector('#consent')?.checked || false,
         honeypot: form.querySelector('#websiteTrap')?.value.trim() || '',
-        formStartedAt: form.querySelector('#formStartedAt')?.value || ''
+        formStartedAt: form.querySelector('#formStartedAt')?.value || '',
+        recaptchaToken: (typeof grecaptcha !== 'undefined' ? grecaptcha.getResponse() : '') || ''
     };
 }
 
@@ -558,6 +574,10 @@ function validateFormPayload(payload) {
 
     if (!payload.consent) {
         return 'Please confirm consent so we can respond to your enquiry.';
+    }
+
+    if (!payload.recaptchaToken) {
+        return 'Please complete the reCAPTCHA verification.';
     }
 
     return '';

@@ -24,7 +24,7 @@
     <link rel="canonical" href="https://kavotech.uk/">
     <link rel="icon" type="image/png" href="public/kavologo.png">
     <link rel="apple-touch-icon" href="public/kavologo.png">
-    <link rel="stylesheet" href="css/styles.css?v=20260503-2">
+    <link rel="stylesheet" href="css/styles.css?v=20260503-3">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -43,6 +43,7 @@
         "sameAs": ["https://twitter.com/kavotech", "https://linkedin.com/company/kavotech"]
     }
     </script>
+    <script src="https://www.google.com/recaptcha/api.js" async defer></script>
 </head>
 <body>
     <!-- Header / Navigation -->
@@ -687,6 +688,9 @@
                         <span>I agree to be contacted by Kavo Tech about this enquiry. *</span>
                     </label>
                 </div>
+                <div class="form-group form-group-full">
+                    <div class="g-recaptcha" data-sitekey="6LcnRtcsAAAAAJ8Sm0iJJPBS5oGn9PLNYQYIvT59"></div>
+                </div>
                 <div class="form-submit">
                     <button type="submit" class="btn btn-primary btn-lg">
                         <span class="quote-submit-label">SEND MESSAGE</span>
@@ -696,6 +700,19 @@
                 <p class="form-helper">The more detail you provide, the faster we can return an accurate proposal.</p>
                 <p class="form-status" role="status" aria-live="polite"></p>
             </form>
+
+            <div class="form-success-screen" id="formSuccessScreen" hidden>
+                <div class="form-success-icon">
+                    <svg width="48" height="48" viewBox="0 0 48 48" fill="none" aria-hidden="true">
+                        <circle cx="24" cy="24" r="24" fill="#19a3bc" fill-opacity="0.12"/>
+                        <circle cx="24" cy="24" r="20" fill="#19a3bc" fill-opacity="0.18"/>
+                        <path d="M14 24.5L21 32L34 18" stroke="#19a3bc" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                </div>
+                <h3 class="form-success-heading">Message received!</h3>
+                <p class="form-success-body" id="formSuccessBody">Thanks, we'll be in touch within 24 hours.</p>
+                <a href="#services" class="btn btn-primary form-success-cta">Explore our services</a>
+            </div>
 
             <div class="contact-cards" data-animate="fade-up" data-delay="300">
                 <div class="contact-card">
@@ -810,7 +827,7 @@
         </div>
     </footer>
 
-    <script src="js/main.js?v=20260503-2"></script>
+    <script src="js/main.js?v=20260503-3"></script>
     <!-- Cookie popup -->
     <div class="cookie-popup" id="cookiePopup" role="dialog" aria-labelledby="cookieTitle" aria-describedby="cookieDesc" aria-modal="true">
         <button class="cookie-close" id="cookieClose" aria-label="Close cookie dialog">✕</button>
