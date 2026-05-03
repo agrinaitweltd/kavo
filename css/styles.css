@@ -1299,7 +1299,7 @@ img {
 .stat-circle-card:nth-child(5) { animation-delay: 0.32s; }
 
 .stat-ring {
-    --ring-color: #19a3bc;
+    --ring-color: #111111;
     --ring-bg: #d9d9d9;
     --ring-size: 182px;
     --ring-thickness: 4px;
@@ -1326,8 +1326,8 @@ img {
     background: conic-gradient(
         transparent 0,
         transparent calc((var(--stat-progress) * 1%) - var(--ring-head-size)),
-        rgba(25, 163, 188, 0.95) calc((var(--stat-progress) * 1%) - var(--ring-head-size)),
-        rgba(25, 163, 188, 0.95) calc(var(--stat-progress) * 1%),
+        rgba(17, 17, 17, 0.95) calc((var(--stat-progress) * 1%) - var(--ring-head-size)),
+        rgba(17, 17, 17, 0.95) calc(var(--stat-progress) * 1%),
         transparent calc(var(--stat-progress) * 1%),
         transparent 100%
     );
@@ -1341,8 +1341,8 @@ img {
     position: absolute;
     inset: -2px;
     border-radius: 50%;
-    border: 2px solid rgba(25, 163, 188, 0.22);
-    box-shadow: 0 0 0 0 rgba(25, 163, 188, 0.2);
+    border: 2px solid rgba(17, 17, 17, 0.18);
+    box-shadow: 0 0 0 0 rgba(17, 17, 17, 0.18);
     opacity: 0;
     transition: opacity 0.2s ease;
     pointer-events: none;
@@ -1403,10 +1403,10 @@ img {
 @keyframes stat-ring-glow {
     0%,
     100% {
-        box-shadow: 0 0 0 0 rgba(25, 163, 188, 0.14);
+        box-shadow: 0 0 0 0 rgba(17, 17, 17, 0.14);
     }
     50% {
-        box-shadow: 0 0 0 6px rgba(25, 163, 188, 0);
+        box-shadow: 0 0 0 6px rgba(17, 17, 17, 0);
     }
 }
 
