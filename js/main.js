@@ -15,7 +15,6 @@ document.addEventListener('DOMContentLoaded', () => {
     initWhatsAppCtas();
     initFormHandling();
     initCookiePopup();
-    initClientPreviews();
 });
 
 const WHATSAPP_NUMBER = '447451267226';
@@ -378,11 +377,15 @@ function initFormHandling() {
             // Show thank-you screen
             const successScreen = document.getElementById('formSuccessScreen');
             const successBody = document.getElementById('formSuccessBody');
+            const contactCards = document.querySelector('.quote-section .contact-cards');
             if (successScreen) {
                 if (successBody && payload.name) {
                     successBody.textContent = `Thanks ${payload.name}, we\u2019ll be in touch within 24 hours.`;
                 }
                 form.hidden = true;
+                if (contactCards) {
+                    contactCards.hidden = true;
+                }
                 successScreen.hidden = false;
                 successScreen.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
             } else {
@@ -782,124 +785,3 @@ function initMobileCardAnimations() {
     cards.forEach(card => observer.observe(card));
 }
 
-// ========================================
-// Client Logo Hover Previews
-// ========================================
-function initClientPreviews() {
-    const logoItems = document.querySelectorAll('.logo-item[data-url]');
-    if (!logoItems.length || window.innerWidth <= 768) return;
-
-    // Create the floating preview element once
-    const preview = document.createElement('div');
-    preview.className = 'site-preview';
-    preview.innerHTML = `
-        <div class="site-preview-header">
-            <span class="site-preview-dot"></span>
-            <span class="site-preview-dot"></span>
-            <span class="site-preview-dot"></span>
-            <span class="site-preview-url"></span>
-        </div>
-        <div class="site-preview-body">
-            <div class="site-preview-loader"></div>
-            <img src="" alt="Site preview" style="opacity:0">
-        </div>
-        <div class="site-preview-visit">
-            Click to visit
-            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 17L17 7"/><path d="M7 7h10v10"/></svg>
-        </div>`;
-    document.body.appendChild(preview);
-
-    const thumb = preview.querySelector('.site-preview-body img');
-    const urlLabel = preview.querySelector('.site-preview-url');
-    const loader = preview.querySelector('.site-preview-loader');
-
-    let hoverTimeout = null;
-    let currentUrl = '';
-
-    // Pre-cache screenshot URLs so hover feels instant
-    const cache = {};
-
-    function getScreenshotUrl(url) {
-        return `https://image.thum.io/get/width/760/crop/480/noanimate/${url}`;
-    }
-
-    function positionPreview(item) {
-        const rect = item.getBoundingClientRect();
-        const pw = 380;
-        const gap = 14;
-
-        // Estimate height (header ~34 + image ~200 + footer ~36)
-        const ph = 280;
-
-        // Place above the logo by default
-        let top = rect.top - ph - gap;
-        let left = rect.left + rect.width / 2 - pw / 2;
-
-        // If it would go above viewport, place below
-        if (top < 8) {
-            top = rect.bottom + gap;
-        }
-        // Keep within horizontal bounds
-        if (left < 8) left = 8;
-        if (left + pw > window.innerWidth - 8) left = window.innerWidth - pw - 8;
-
-        preview.style.top = top + 'px';
-        preview.style.left = left + 'px';
-    }
-
-    logoItems.forEach(item => {
-        const url = item.getAttribute('data-url');
-
-        // Preload screenshot on first intersection
-        const preloadObserver = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting && url && !cache[url]) {
-                    const img = new Image();
-                    img.src = getScreenshotUrl(url);
-                    cache[url] = img;
-                    preloadObserver.unobserve(item);
-                }
-            });
-        }, { rootMargin: '200px' });
-        preloadObserver.observe(item);
-
-        item.addEventListener('mouseenter', () => {
-            if (!url) return;
-            clearTimeout(hoverTimeout);
-
-            hoverTimeout = setTimeout(() => {
-                positionPreview(item);
-                urlLabel.textContent = url.replace(/^https?:\/\//, '').replace(/\/$/, '');
-
-                if (currentUrl !== url) {
-                    currentUrl = url;
-                    loader.style.display = 'block';
-                    thumb.style.opacity = '0';
-
-                    const src = getScreenshotUrl(url);
-                    thumb.src = src;
-                    thumb.onload = () => {
-                        loader.style.display = 'none';
-                        thumb.style.opacity = '1';
-                    };
-                    thumb.onerror = () => {
-                        loader.style.display = 'none';
-                        thumb.style.opacity = '0';
-                    };
-                }
-
-                preview.classList.add('visible');
-            }, 200);
-        });
-
-        item.addEventListener('mouseleave', () => {
-            clearTimeout(hoverTimeout);
-            preview.classList.remove('visible');
-        });
-
-        // Click takes user to the site
-        item.addEventListener('click', () => {
-            if (url) window.open(url, '_blank', 'noopener,noreferrer');
-        });
-    });
-}
