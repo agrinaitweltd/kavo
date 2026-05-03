@@ -24,7 +24,7 @@
     <link rel="canonical" href="https://kavotech.uk/">
     <link rel="icon" type="image/png" href="public/kavologo.png">
     <link rel="apple-touch-icon" href="public/kavologo.png">
-    <link rel="stylesheet" href="css/styles.css?v=20260503-5">
+    <link rel="stylesheet" href="css/styles.css?v=20260503-6">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -61,7 +61,7 @@
                 </ul>
                 <a href="#quote" class="btn btn-primary nav-cta">GET QUOTE</a>
             </nav>
-            <button class="mobile-menu-toggle" aria-label="Toggle menu">
+            <button class="mobile-menu-toggle" aria-label="Open menu" aria-expanded="false" aria-controls="mobileNavDrawer">
                 <span></span>
                 <span></span>
                 <span></span>
@@ -70,14 +70,25 @@
     </header>
 
     <!-- Mobile Navigation -->
-    <div class="mobile-nav">
-        <ul class="mobile-nav-links">
-            <li><a href="#services">SERVICES</a></li>
-            <li><a href="#clients">CLIENTS</a></li>
-            <li><a href="#pricing">PRICING</a></li>
-            <li><a href="#why-us">WHY US</a></li>
-            <li><a href="#quote" class="btn btn-primary">GET QUOTE</a></li>
-        </ul>
+    <div class="mobile-nav" id="mobileNavDrawer" hidden>
+        <button class="mobile-nav-backdrop" type="button" aria-label="Close menu" data-close-mobile-nav></button>
+        <nav class="mobile-nav-panel" aria-label="Mobile menu">
+            <div class="mobile-nav-panel-header">
+                <span class="mobile-nav-title">MENU</span>
+                <button class="mobile-nav-close" type="button" aria-label="Close menu" data-close-mobile-nav>
+                    <span></span>
+                    <span></span>
+                </button>
+            </div>
+            <ul class="mobile-nav-links">
+                <li><a href="#services">SERVICES</a></li>
+                <li><a href="#clients">CLIENTS</a></li>
+                <li><a href="#pricing">PRICING</a></li>
+                <li><a href="#why-us">WHY US</a></li>
+                <li><a href="#quote">CONTACT</a></li>
+            </ul>
+            <a href="#quote" class="btn btn-primary mobile-nav-cta">GET QUOTE</a>
+        </nav>
     </div>
 
     <!-- Hero Section -->
@@ -247,20 +258,38 @@
                 <p class="section-subtitle">We build websites for companies across the globe.</p>
             </div>
 
-            <div class="clients-logos" data-animate="fade-up" data-delay="200">
-                <div class="logos-track">
-                    <div class="logo-item" data-url="https://krbfm.co.uk"><img src="public/logo1.png" alt="Client 1"></div>
-                    <div class="logo-item" data-url="https://www.brown-co.com/"><img src="public/logo2.png" alt="Client 2"></div>
-                    <div class="logo-item" data-url="https://krbfm.co.uk"><img src="public/logo3.png" alt="Client 3"></div>
-                    <div class="logo-item" data-url="https://www.breezyeemoves.co.uk/"><img src="public/logo4.png" alt="Client 4"></div>
-                    <div class="logo-item logo-item--dark" data-url="https://cfhubuk.com"><img src="public/logo5.png" alt="Client 5"></div>
-                    <div class="logo-item" data-url="https://triportagro.com"><img src="public/logo6.png" alt="Client 6"></div>
-                    <div class="logo-item" data-url="https://krbfm.co.uk"><img src="public/logo1.png" alt="Client 1"></div>
-                    <div class="logo-item" data-url="https://www.brown-co.com/"><img src="public/logo2.png" alt="Client 2"></div>
-                    <div class="logo-item" data-url="https://krbfm.co.uk"><img src="public/logo3.png" alt="Client 3"></div>
-                    <div class="logo-item" data-url="https://www.breezyeemoves.co.uk/"><img src="public/logo4.png" alt="Client 4"></div>
-                    <div class="logo-item logo-item--dark" data-url="https://cfhubuk.com"><img src="public/logo5.png" alt="Client 5"></div>
-                    <div class="logo-item" data-url="https://triportagro.com"><img src="public/logo6.png" alt="Client 6"></div>
+            <div class="clients-showcase" data-animate="fade-up" data-delay="200">
+                <div class="logos-marquee">
+                    <div class="logos-track logos-track-forward" aria-label="Client logos">
+                        <div class="logo-item-simple"><img src="public/logo1.png" alt="Client logo"></div>
+                        <div class="logo-item-simple"><img src="public/logo2.png" alt="Client logo"></div>
+                        <div class="logo-item-simple"><img src="public/logo3.png" alt="Client logo"></div>
+                        <div class="logo-item-simple"><img src="public/logo4.png" alt="Client logo"></div>
+                        <div class="logo-item-simple"><img src="public/logo5.png" alt="Client logo"></div>
+                        <div class="logo-item-simple"><img src="public/logo6.png" alt="Client logo"></div>
+                        <div class="logo-item-simple"><img src="public/logo1.png" alt="Client logo"></div>
+                        <div class="logo-item-simple"><img src="public/logo2.png" alt="Client logo"></div>
+                        <div class="logo-item-simple"><img src="public/logo3.png" alt="Client logo"></div>
+                        <div class="logo-item-simple"><img src="public/logo4.png" alt="Client logo"></div>
+                        <div class="logo-item-simple"><img src="public/logo5.png" alt="Client logo"></div>
+                        <div class="logo-item-simple"><img src="public/logo6.png" alt="Client logo"></div>
+                    </div>
+                </div>
+                <div class="logos-marquee logos-marquee-alt">
+                    <div class="logos-track logos-track-reverse" aria-hidden="true">
+                        <div class="logo-item-simple"><img src="public/logo6.png" alt=""></div>
+                        <div class="logo-item-simple"><img src="public/logo5.png" alt=""></div>
+                        <div class="logo-item-simple"><img src="public/logo4.png" alt=""></div>
+                        <div class="logo-item-simple"><img src="public/logo3.png" alt=""></div>
+                        <div class="logo-item-simple"><img src="public/logo2.png" alt=""></div>
+                        <div class="logo-item-simple"><img src="public/logo1.png" alt=""></div>
+                        <div class="logo-item-simple"><img src="public/logo6.png" alt=""></div>
+                        <div class="logo-item-simple"><img src="public/logo5.png" alt=""></div>
+                        <div class="logo-item-simple"><img src="public/logo4.png" alt=""></div>
+                        <div class="logo-item-simple"><img src="public/logo3.png" alt=""></div>
+                        <div class="logo-item-simple"><img src="public/logo2.png" alt=""></div>
+                        <div class="logo-item-simple"><img src="public/logo1.png" alt=""></div>
+                    </div>
                 </div>
             </div>
 
@@ -706,16 +735,22 @@
             </form>
 
             <div class="form-success-screen" id="formSuccessScreen" hidden>
-                <div class="form-success-icon">
-                    <svg width="48" height="48" viewBox="0 0 48 48" fill="none" aria-hidden="true">
-                        <circle cx="24" cy="24" r="24" fill="#19a3bc" fill-opacity="0.12"/>
-                        <circle cx="24" cy="24" r="20" fill="#19a3bc" fill-opacity="0.18"/>
-                        <path d="M14 24.5L21 32L34 18" stroke="#19a3bc" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
-                    </svg>
+                <div class="form-success-shell">
+                    <span class="form-success-kicker">Submission successful</span>
+                    <div class="form-success-icon">
+                        <svg width="58" height="58" viewBox="0 0 58 58" fill="none" aria-hidden="true">
+                            <circle cx="29" cy="29" r="29" fill="#19a3bc" fill-opacity="0.12"/>
+                            <circle cx="29" cy="29" r="24" fill="#19a3bc" fill-opacity="0.18"/>
+                            <path d="M18 29.5L26 37L41 21" stroke="#19a3bc" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                    </div>
+                    <h3 class="form-success-heading">Message received!</h3>
+                    <p class="form-success-body" id="formSuccessBody">Thanks, we'll be in touch within 24 hours.</p>
+                    <div class="form-success-actions">
+                        <a href="#services" class="btn btn-primary form-success-cta">Explore our services</a>
+                        <a href="#home" class="btn btn-outline form-success-secondary">Back to top</a>
+                    </div>
                 </div>
-                <h3 class="form-success-heading">Message received!</h3>
-                <p class="form-success-body" id="formSuccessBody">Thanks, we'll be in touch within 24 hours.</p>
-                <a href="#services" class="btn btn-primary form-success-cta">Explore our services</a>
             </div>
 
             <div class="contact-cards" data-animate="fade-up" data-delay="300">
@@ -831,7 +866,7 @@
         </div>
     </footer>
 
-    <script src="js/main.js?v=20260503-5"></script>
+    <script src="js/main.js?v=20260503-6"></script>
     <!-- Cookie popup -->
     <div class="cookie-popup" id="cookiePopup" role="dialog" aria-labelledby="cookieTitle" aria-describedby="cookieDesc" aria-modal="true">
         <button class="cookie-close" id="cookieClose" aria-label="Close cookie dialog">✕</button>

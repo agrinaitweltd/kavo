@@ -66,21 +66,62 @@ function initMobileMenu() {
     const toggle = document.querySelector('.mobile-menu-toggle');
     const mobileNav = document.querySelector('.mobile-nav');
     const mobileLinks = document.querySelectorAll('.mobile-nav-links a');
+    const closeButtons = document.querySelectorAll('[data-close-mobile-nav]');
 
     if (!toggle || !mobileNav) return;
 
+    function openMenu() {
+        mobileNav.hidden = false;
+        requestAnimationFrame(() => {
+            toggle.classList.add('active');
+            mobileNav.classList.add('active');
+            toggle.setAttribute('aria-expanded', 'true');
+            toggle.setAttribute('aria-label', 'Close menu');
+            document.body.classList.add('body-menu-open');
+        });
+    }
+
+    function closeMenu() {
+        toggle.classList.remove('active');
+        mobileNav.classList.remove('active');
+        toggle.setAttribute('aria-expanded', 'false');
+        toggle.setAttribute('aria-label', 'Open menu');
+        document.body.classList.remove('body-menu-open');
+        setTimeout(() => {
+            if (!mobileNav.classList.contains('active')) {
+                mobileNav.hidden = true;
+            }
+        }, 340);
+    }
+
     toggle.addEventListener('click', () => {
-        toggle.classList.toggle('active');
-        mobileNav.classList.toggle('active');
-        document.body.style.overflow = mobileNav.classList.contains('active') ? 'hidden' : '';
+        if (mobileNav.classList.contains('active')) {
+            closeMenu();
+        } else {
+            openMenu();
+        }
+    });
+
+    closeButtons.forEach((button) => {
+        button.addEventListener('click', closeMenu);
     });
 
     mobileLinks.forEach(link => {
         link.addEventListener('click', () => {
-            toggle.classList.remove('active');
-            mobileNav.classList.remove('active');
-            document.body.style.overflow = '';
+            closeMenu();
         });
+    });
+
+    window.addEventListener('keydown', (event) => {
+        if (event.key === 'Escape' && mobileNav.classList.contains('active')) {
+            closeMenu();
+        }
+    });
+
+    window.addEventListener('resize', () => {
+        if (window.innerWidth > 768 && mobileNav.classList.contains('active')) {
+            closeMenu();
+        }
     });
 }
 
