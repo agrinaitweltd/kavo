@@ -1662,6 +1662,10 @@ img {
     text-align: center;
 }
 
+.form-success-screen[hidden] {
+    display: none !important;
+}
+
 .form-success-shell {
     width: 100%;
     border: 1.5px solid var(--gray-200);

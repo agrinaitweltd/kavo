@@ -333,6 +333,10 @@ function initFormHandling() {
         if (contactCards) {
             contactCards.hidden = false;
         }
+        if (statusElement) {
+            statusElement.textContent = '';
+            statusElement.removeAttribute('data-state');
+        }
     }
 
     resetFormUi();
