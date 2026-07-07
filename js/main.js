@@ -17,7 +17,7 @@ document.addEventListener('DOMContentLoaded', () => {
     initCookiePopup();
 });
 
-const WHATSAPP_NUMBER = '447451267226';
+const WHATSAPP_NUMBER = '447418356179';
 const CONTACT_API_ENDPOINT = '/api/contact';
 const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
