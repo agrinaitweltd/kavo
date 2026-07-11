@@ -59,15 +59,64 @@ function initHeader() {
 }
 
 // ========================================
+// Focus Trap Helper (for modal-like overlays)
+// ========================================
+function createFocusTrap(container) {
+    const FOCUSABLE_SELECTOR =
+        'a[href], button:not([disabled]), input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])';
+
+    function getFocusable() {
+        return Array.from(container.querySelectorAll(FOCUSABLE_SELECTOR))
+            .filter((el) => el.offsetParent !== null);
+    }
+
+    function handleKeydown(event) {
+        if (event.key !== 'Tab') return;
+
+        const focusable = getFocusable();
+        if (!focusable.length) return;
+
+        const first = focusable[0];
+        const last = focusable[focusable.length - 1];
+
+        if (event.shiftKey && document.activeElement === first) {
+            event.preventDefault();
+            last.focus();
+        } else if (!event.shiftKey && document.activeElement === last) {
+            event.preventDefault();
+            first.focus();
+        }
+    }
+
+    return {
+        activate(initialFocusEl) {
+            container.addEventListener('keydown', handleKeydown);
+            const focusable = getFocusable();
+            const target = initialFocusEl && focusable.includes(initialFocusEl) ? initialFocusEl : focusable[0];
+            if (target) target.focus();
+        },
+        deactivate(restoreFocusTo) {
+            container.removeEventListener('keydown', handleKeydown);
+            if (restoreFocusTo && typeof restoreFocusTo.focus === 'function') {
+                restoreFocusTo.focus();
+            }
+        }
+    };
+}
+
+// ========================================
 // Mobile Menu
 // ========================================
 function initMobileMenu() {
     const toggle = document.querySelector('.mobile-menu-toggle');
     const mobileNav = document.querySelector('.mobile-nav');
+    const mobileNavClose = document.querySelector('.mobile-nav-close');
     const mobileLinks = document.querySelectorAll('.mobile-nav-links a');
     const closeButtons = document.querySelectorAll('[data-close-mobile-nav]');
 
     if (!toggle || !mobileNav) return;
+
+    const focusTrap = createFocusTrap(mobileNav);
 
     function openMenu() {
         mobileNav.hidden = false;
@@ -77,6 +126,7 @@ function initMobileMenu() {
             toggle.setAttribute('aria-expanded', 'true');
             toggle.setAttribute('aria-label', 'Close menu');
             document.body.classList.add('body-menu-open');
+            focusTrap.activate(mobileNavClose);
         });
     }
 
@@ -86,6 +136,7 @@ function initMobileMenu() {
         toggle.setAttribute('aria-expanded', 'false');
         toggle.setAttribute('aria-label', 'Open menu');
         document.body.classList.remove('body-menu-open');
+        focusTrap.deactivate(toggle);
         setTimeout(() => {
             if (!mobileNav.classList.contains('active')) {
                 mobileNav.hidden = true;
@@ -716,13 +767,29 @@ function initCookiePopup() {
 
         if (accepted === 'accepted') return;
 
+        const focusTrap = createFocusTrap(popup);
+        let lastFocusedBeforePopup = null;
+
         // show after slight delay so it doesn't feel abrupt
-        setTimeout(() => popup.classList.add('show'), 700);
+        setTimeout(() => {
+            lastFocusedBeforePopup = document.activeElement;
+            popup.classList.add('show');
+            focusTrap.activate(closeBtn);
+        }, 700);
 
         function closePopup() {
             popup.classList.remove('show');
+            focusTrap.deactivate(
+                lastFocusedBeforePopup && lastFocusedBeforePopup !== document.body ? lastFocusedBeforePopup : null
+            );
             setTimeout(() => { popup.style.display = 'none'; }, 350);
         }
+
+        window.addEventListener('keydown', (event) => {
+            if (event.key === 'Escape' && popup.classList.contains('show')) {
+                closePopup();
+            }
+        });
 
         acceptBtn && acceptBtn.addEventListener('click', () => {
             localStorage.setItem(key, 'accepted');
