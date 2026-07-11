@@ -1010,6 +1010,13 @@ img {
     display: grid;
     place-items: center;
     background: #ffffff;
+    border-radius: 12px;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.logo-item-simple:hover {
+    transform: translateY(-3px);
+    box-shadow: var(--shadow-md);
 }
 
 .logo-item-simple img {
@@ -1019,7 +1026,12 @@ img {
     object-fit: contain;
     filter: grayscale(100%) opacity(0.63);
     transform: scale(0.98);
-    animation: logo-gentle-breathe 3.6s ease-in-out infinite;
+    transition: filter 0.35s ease, transform 0.35s ease;
+}
+
+.logo-item-simple:hover img {
+    filter: grayscale(0%) opacity(1);
+    transform: scale(1.06);
 }
 
 .logos-marquee:hover .logos-track {
@@ -1036,16 +1048,6 @@ img {
     100% { transform: translateX(0); }
 }
 
-@keyframes logo-gentle-breathe {
-    0%,
-    100% {
-        filter: grayscale(100%) opacity(0.6);
-    }
-    50% {
-        filter: grayscale(86%) opacity(0.8);
-    }
-}
-
 .clients-stats {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
@@ -1058,7 +1060,15 @@ img {
     flex-direction: column;
     align-items: center;
     gap: 8px;
+    padding: 16px 12px;
+    border-radius: 12px;
+    transition: transform 0.3s ease, background-color 0.3s ease;
     animation: surface-breathe 5.8s ease-in-out infinite;
+}
+
+.client-stat:hover {
+    transform: translateY(-4px);
+    background: var(--gray-50);
 }
 
 .client-stat:nth-child(2) { animation-delay: 0.3s; }
