@@ -15,6 +15,9 @@ document.addEventListener('DOMContentLoaded', () => {
     initWhatsAppCtas();
     initFormHandling();
     initCookiePopup();
+    initScrollProgress();
+    initIconDrawAnimations();
+    initPageNav();
 });
 
 const WHATSAPP_NUMBER = '447418356179';
@@ -717,6 +720,70 @@ function updateFormStatus(element, message, state) {
 
     element.textContent = message;
     element.dataset.state = state;
+}
+
+// ========================================
+// Scroll Progress Bar
+// ========================================
+function initScrollProgress() {
+    const bar = document.createElement('div');
+    bar.className = 'scroll-progress';
+    bar.setAttribute('aria-hidden', 'true');
+    document.body.appendChild(bar);
+
+    function update() {
+        const scrollTop = window.pageYOffset;
+        const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+        const progress = docHeight > 0 ? (scrollTop / docHeight) * 100 : 0;
+        bar.style.width = `${Math.min(100, Math.max(0, progress))}%`;
+    }
+
+    update();
+    window.addEventListener('scroll', update, { passive: true });
+    window.addEventListener('resize', update);
+}
+
+// ========================================
+// Icon Draw-in Animation
+// ========================================
+function initIconDrawAnimations() {
+    const icons = document.querySelectorAll(
+        '.service-icon svg, .why-icon svg, .contact-card-icon svg, .client-stat-icon svg'
+    );
+
+    if (!icons.length) return;
+
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+        return;
+    }
+
+    icons.forEach((icon) => icon.classList.add('icon-draw'));
+
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach((entry) => {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('in-view');
+                observer.unobserve(entry.target);
+            }
+        });
+    }, { threshold: 0.4, rootMargin: '0px 0px -30px 0px' });
+
+    icons.forEach((icon) => observer.observe(icon));
+}
+
+// ========================================
+// Multi-page Nav Active State
+// ========================================
+function initPageNav() {
+    const currentPage = document.body.dataset.page;
+    if (!currentPage) return;
+
+    const navLinks = document.querySelectorAll('[data-page-link]');
+    navLinks.forEach((link) => {
+        if (link.getAttribute('data-page-link') === currentPage) {
+            link.classList.add('active');
+        }
+    });
 }
 
 // ========================================

@@ -4,8 +4,8 @@
   "description": "Pixel-perfect clone of Kavo Tech reference site",
   "main": "index.html",
   "scripts": {
-    "start": "serve -s . -l 5000",
-    "dev": "serve -s . -l 5000"
+    "start": "serve . -l 5000",
+    "dev": "serve . -l 5000"
   },
   "author": "",
   "license": "MIT",

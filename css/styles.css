@@ -2750,3 +2750,428 @@ img {
         transform: none;
     }
 }
+
+/* ========================================
+   Scroll Progress Bar
+   ======================================== */
+.scroll-progress {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 3px;
+    width: 0%;
+    background: linear-gradient(90deg, var(--gray-500) 0%, var(--black) 100%);
+    z-index: 1200;
+    pointer-events: none;
+}
+
+/* ========================================
+   Page Enter Transition
+   ======================================== */
+body.page-enter {
+    animation: page-fade-in 0.6s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+@keyframes page-fade-in {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: none; }
+}
+
+/* ========================================
+   Page Hero (inner pages)
+   ======================================== */
+.page-hero {
+    position: relative;
+    padding: 168px 0 84px;
+    overflow: hidden;
+    text-align: center;
+    background: var(--black);
+    color: var(--white);
+    isolation: isolate;
+}
+
+.page-hero .container {
+    position: relative;
+    z-index: 2;
+}
+
+.page-hero-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 20px;
+    border: 1.5px solid rgba(255, 255, 255, 0.28);
+    font-family: var(--font-primary);
+    font-size: 0.65rem;
+    font-weight: 600;
+    letter-spacing: 3px;
+    color: var(--gray-300);
+    margin-bottom: 28px;
+    opacity: 0;
+    animation: page-hero-rise 0.8s cubic-bezier(0.22, 1, 0.36, 1) 0.05s both;
+}
+
+.page-hero-title {
+    font-family: var(--font-primary);
+    font-size: clamp(2.6rem, 7vw, 5rem);
+    font-weight: 900;
+    line-height: 1.05;
+    letter-spacing: -2px;
+    color: var(--white);
+    margin-bottom: 20px;
+    opacity: 0;
+    animation: page-hero-rise 0.9s cubic-bezier(0.22, 1, 0.36, 1) 0.15s both;
+}
+
+.page-hero-subtitle {
+    font-size: 1rem;
+    color: var(--gray-400);
+    max-width: 540px;
+    margin: 0 auto;
+    line-height: 1.7;
+    opacity: 0;
+    animation: page-hero-rise 0.9s cubic-bezier(0.22, 1, 0.36, 1) 0.28s both;
+}
+
+@keyframes page-hero-rise {
+    from { opacity: 0; transform: translateY(18px); }
+    to { opacity: 1; transform: none; }
+}
+
+.page-hero-decor {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    pointer-events: none;
+}
+
+.page-hero-decor svg {
+    position: absolute;
+    opacity: 0.5;
+}
+
+.page-hero-blob-1 {
+    width: 360px;
+    height: 360px;
+    top: -110px;
+    left: -100px;
+    animation: blob-float 11s ease-in-out infinite;
+}
+
+.page-hero-blob-2 {
+    width: 300px;
+    height: 300px;
+    bottom: -120px;
+    right: -80px;
+    opacity: 0.35;
+    animation: blob-float 14s ease-in-out infinite reverse;
+}
+
+.page-hero-ring {
+    width: 130px;
+    height: 130px;
+    top: 22%;
+    right: 9%;
+    opacity: 0.22;
+    animation: spin-slow 22s linear infinite;
+}
+
+.page-hero-ring-2 {
+    width: 70px;
+    height: 70px;
+    bottom: 16%;
+    left: 8%;
+    opacity: 0.28;
+    animation: spin-slow 16s linear infinite reverse;
+}
+
+.page-hero-dots {
+    width: 140px;
+    height: 140px;
+    top: 12%;
+    left: 6%;
+    opacity: 0.25;
+    animation: dots-drift 9s ease-in-out infinite;
+}
+
+@keyframes blob-float {
+    0%, 100% { transform: translate(0, 0) scale(1) rotate(0deg); }
+    50% { transform: translate(18px, -22px) scale(1.06) rotate(6deg); }
+}
+
+@keyframes spin-slow {
+    to { transform: rotate(360deg); }
+}
+
+@keyframes dots-drift {
+    0%, 100% { transform: translate(0, 0); }
+    50% { transform: translate(10px, 12px); }
+}
+
+/* ========================================
+   CTA Banner (reused before footer)
+   ======================================== */
+.cta-banner {
+    position: relative;
+    background: var(--black);
+    color: var(--white);
+    padding: 100px 0;
+    text-align: center;
+    overflow: hidden;
+    isolation: isolate;
+}
+
+.cta-banner-decor {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    pointer-events: none;
+}
+
+.cta-banner-decor svg {
+    position: absolute;
+    opacity: 0.45;
+}
+
+.cta-banner-decor .page-hero-blob-1 { top: -140px; left: -60px; }
+.cta-banner-decor .page-hero-blob-2 { bottom: -140px; right: -40px; }
+.cta-banner-decor .page-hero-ring { top: 12%; right: 14%; }
+
+.cta-banner-inner {
+    position: relative;
+    z-index: 2;
+    max-width: 640px;
+    margin: 0 auto;
+}
+
+.cta-banner-tag {
+    display: inline-flex;
+    font-family: var(--font-primary);
+    font-size: 0.65rem;
+    font-weight: 600;
+    letter-spacing: 3px;
+    color: var(--gray-400);
+    margin-bottom: 20px;
+}
+
+.cta-banner-title {
+    font-family: var(--font-primary);
+    font-size: clamp(2rem, 5vw, 3.2rem);
+    font-weight: 900;
+    letter-spacing: -1.5px;
+    line-height: 1.1;
+    margin-bottom: 18px;
+}
+
+.cta-banner-subtitle {
+    color: var(--gray-400);
+    font-size: 1rem;
+    line-height: 1.7;
+    margin-bottom: 36px;
+}
+
+.cta-banner[data-animate].animated .cta-banner-inner > * {
+    animation: page-hero-rise 0.8s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.cta-banner[data-animate].animated .cta-banner-tag { animation-delay: 0.02s; }
+.cta-banner[data-animate].animated .cta-banner-title { animation-delay: 0.1s; }
+.cta-banner[data-animate].animated .cta-banner-subtitle { animation-delay: 0.2s; }
+.cta-banner[data-animate].animated .btn { animation-delay: 0.3s; }
+
+/* ========================================
+   Button Shine Sweep
+   ======================================== */
+.btn {
+    position: relative;
+    overflow: hidden;
+}
+
+.btn::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -150%;
+    width: 55%;
+    height: 100%;
+    background: linear-gradient(120deg, transparent, rgba(255, 255, 255, 0.35), transparent);
+    transform: skewX(-20deg);
+    pointer-events: none;
+}
+
+.btn-outline::after {
+    background: linear-gradient(120deg, transparent, rgba(0, 0, 0, 0.15), transparent);
+}
+
+.btn:hover::after {
+    animation: btn-shine 0.85s ease;
+}
+
+@keyframes btn-shine {
+    from { left: -150%; }
+    to { left: 150%; }
+}
+
+/* ========================================
+   Icon Draw-in (stroke reveal on scroll)
+   ======================================== */
+.icon-draw path,
+.icon-draw line,
+.icon-draw circle,
+.icon-draw polyline,
+.icon-draw polygon,
+.icon-draw rect {
+    stroke-dasharray: 70;
+    stroke-dashoffset: 70;
+    transition: stroke-dashoffset 0.9s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.icon-draw.in-view path,
+.icon-draw.in-view line,
+.icon-draw.in-view circle,
+.icon-draw.in-view polyline,
+.icon-draw.in-view polygon,
+.icon-draw.in-view rect {
+    stroke-dashoffset: 0;
+}
+
+/* ========================================
+   Floating shape accents (misc sections)
+   ======================================== */
+.float-shape {
+    position: absolute;
+    pointer-events: none;
+    opacity: 0.5;
+    animation: float-shape-drift 7s ease-in-out infinite;
+}
+
+@keyframes float-shape-drift {
+    0%, 100% { transform: translateY(0) rotate(0deg); }
+    50% { transform: translateY(-14px) rotate(8deg); }
+}
+
+@media (max-width: 768px) {
+    .page-hero {
+        padding: 140px 0 64px;
+    }
+
+    .cta-banner {
+        padding: 72px 0;
+    }
+}
+
+/* ========================================
+   Our Process (services page)
+   ======================================== */
+.process {
+    padding: 100px 0;
+    background: var(--gray-50);
+}
+
+.process-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 32px;
+    position: relative;
+    margin-top: 20px;
+}
+
+.process-grid::before {
+    content: '';
+    position: absolute;
+    top: 34px;
+    left: 8%;
+    right: 8%;
+    height: 2px;
+    background: repeating-linear-gradient(90deg, var(--gray-300) 0 10px, transparent 10px 20px);
+    z-index: 0;
+}
+
+.process-step {
+    position: relative;
+    z-index: 1;
+    text-align: center;
+}
+
+.process-number {
+    width: 68px;
+    height: 68px;
+    border-radius: 50%;
+    background: var(--black);
+    color: var(--white);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: var(--font-primary);
+    font-weight: 800;
+    font-size: 1.1rem;
+    margin: 0 auto 20px;
+    transition: var(--transition);
+}
+
+.process-step:hover .process-number {
+    transform: scale(1.1);
+    box-shadow: var(--shadow-lg);
+}
+
+.process-step h3 {
+    font-family: var(--font-primary);
+    font-size: 1rem;
+    font-weight: 700;
+    letter-spacing: 1px;
+    margin-bottom: 10px;
+    text-transform: uppercase;
+}
+
+.process-step p {
+    color: var(--gray-500);
+    font-size: 0.9rem;
+    line-height: 1.6;
+}
+
+@media (max-width: 900px) {
+    .process-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 40px 24px;
+    }
+
+    .process-grid::before {
+        display: none;
+    }
+}
+
+@media (max-width: 480px) {
+    .process-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    body.page-enter {
+        animation: none;
+        opacity: 1;
+    }
+
+    .page-hero-tag,
+    .page-hero-title,
+    .page-hero-subtitle,
+    .cta-banner[data-animate].animated .cta-banner-inner > * {
+        animation: none !important;
+        opacity: 1 !important;
+        transform: none !important;
+    }
+
+    .icon-draw path,
+    .icon-draw line,
+    .icon-draw circle,
+    .icon-draw polyline,
+    .icon-draw polygon,
+    .icon-draw rect {
+        stroke-dashoffset: 0 !important;
+        transition: none !important;
+    }
+
+    .scroll-progress {
+        transition: none !important;
+    }
+}
